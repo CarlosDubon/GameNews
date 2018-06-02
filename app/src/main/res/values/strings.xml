@@ -6,4 +6,7 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="text_titulo_de_noticia">TITULO DE NOTICIA</string>
+    <string name="text_descripcion_de_noticias">Descripcion de noticias</string>
+    <string name="text_categoria">Categoria</string>
 </resources>

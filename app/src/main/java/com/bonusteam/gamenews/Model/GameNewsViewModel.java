@@ -11,11 +11,11 @@ import com.bonusteam.gamenews.Repository.GameNewsRepository;
 
 import java.util.List;
 
-public class GameNewsVewModel extends AndroidViewModel {
+public class GameNewsViewModel extends AndroidViewModel {
     private GameNewsRepository gameNewsRepository;
     private LiveData<List<User>> userList;
     private LiveData<List<New>>  newList;
-    public GameNewsVewModel(@NonNull Application application) {
+    public GameNewsViewModel(@NonNull Application application) {
         super(application);
         gameNewsRepository = new GameNewsRepository(application);
         userList = gameNewsRepository.getAllUsers();

@@ -17,6 +17,9 @@ public class User {
     @ColumnInfo(name = "username")
     private String username;
     @NonNull
+    @ColumnInfo(name = "avatar")
+    private String avatar ="http://noAvatar.jpg";
+    @NonNull
     @ColumnInfo(name = "password")
     private String password;
     @NonNull
@@ -25,9 +28,10 @@ public class User {
     @Ignore
     private List<String> favoritesNews=null;
 
-    public User(String _id, @NonNull String username, @NonNull String password, @NonNull String createDate) {
+    public User(String _id, @NonNull String username, @NonNull String avatar, @NonNull String password, @NonNull String createDate) {
         this._id = _id;
         this.username = username;
+        this.avatar = avatar;
         this.password = password;
         this.createDate = createDate;
     }
