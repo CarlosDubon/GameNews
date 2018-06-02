@@ -50,7 +50,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     public void onBindViewHolder(@NonNull NewsViewHolder holder, int position) {
         Picasso.get().load(newList.get(position).getConverImage()).into(holder.imageNews);
         holder.category.setText(newList.get(position).getGame());
-        holder.title.setText(newList.get(position).getDescription());
+        holder.title.setText(newList.get(position).getTitle());
         holder.description.setText(newList.get(position).getDescription());
         holder.date.setText(newList.get(position).getCreateDate());
     }

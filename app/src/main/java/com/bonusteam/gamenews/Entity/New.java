@@ -26,8 +26,6 @@ public class New {
     @ColumnInfo(name = "game")
     private String game;
 
-    public New(){}
-
     public New(@NonNull String _id, String title, @NonNull String converImage, String createDate, String description, String body, @NonNull String game) {
         this._id = _id;
         this.title = title;
@@ -35,6 +33,34 @@ public class New {
         this.createDate = createDate;
         this.description = description;
         this.body = body;
+        this.game = game;
+    }
+
+    public void set_id(@NonNull String _id) {
+        this._id = _id;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setConverImage(@NonNull String converImage) {
+        this.converImage = converImage;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public void setGame(@NonNull String game) {
         this.game = game;
     }
 

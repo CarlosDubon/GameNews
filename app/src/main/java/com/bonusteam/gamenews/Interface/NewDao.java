@@ -2,6 +2,7 @@ package com.bonusteam.gamenews.Interface;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
@@ -18,4 +19,6 @@ public interface NewDao {
     LiveData<List<New>> getNewsByCategory(String game);
     @Insert
     void insertNew(New news);
+    @Query("DELETE FROM news_table")
+    void deleteAll();
 }

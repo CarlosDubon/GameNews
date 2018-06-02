@@ -21,6 +21,7 @@ public class GameNewsRepository {
     public GameNewsRepository(Application application){
         GameNewsRoomDatabase db = GameNewsRoomDatabase.getDatabase(application);
         userDao = db.userDao();
+        newDao = db.newDao();
         userList = userDao.getAllUsers();
         newList = newDao.getAllNews();
     }
