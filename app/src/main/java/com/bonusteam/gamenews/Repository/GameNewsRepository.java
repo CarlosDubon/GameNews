@@ -3,9 +3,11 @@ package com.bonusteam.gamenews.Repository;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.bonusteam.gamenews.API.GameNewsAPI;
 import com.bonusteam.gamenews.API.NewsRepoDeserializer;
+import com.bonusteam.gamenews.Activity.MainActivity;
 import com.bonusteam.gamenews.DB.GameNewsRoomDatabase;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.User;
@@ -17,7 +19,11 @@ import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.util.List;
 
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableSingleObserver;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -40,6 +46,7 @@ public class GameNewsRepository {
         newDao = db.newDao();
         userList = userDao.getAllUsers();
         newList = newDao.getAllNews();
+        createAPI();
     }
 
     public LiveData<List<User>> getAllUsers(){
@@ -47,6 +54,10 @@ public class GameNewsRepository {
     }
 
     public LiveData<List<New>> getAllNews() {
+        disposable.add(api.getNewsByRepo()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeWith(getNewsRepoObserver()));
         return newList;
     }
     public void insertUser(User user){
@@ -55,6 +66,7 @@ public class GameNewsRepository {
     public void insertNews(New news){
         new newsInsertAsyncTask(newDao).execute(news);
     }
+
     private static class userInsertAsyncTask extends AsyncTask<User,Void,Void>{
         private UserDao userDao;
 
@@ -93,7 +105,7 @@ public class GameNewsRepository {
                     @Override
                     public Response intercept(Chain chain) throws IOException {
                         Request newRequest = chain.request().newBuilder()
-                                .addHeader("Autorization","Bearer")
+                                .addHeader("Authorization","Bearer "+ MainActivity.securityToken.getTokenSecurity())
                                 .build();
                         return chain.proceed(newRequest);
                     }
@@ -108,6 +120,31 @@ public class GameNewsRepository {
                 .build();
         api = retrofit.create(GameNewsAPI.class);
 
+    }
+    private DisposableSingleObserver<List<New>> getNewsRepoObserver(){
+        return new DisposableSingleObserver<List<New>>() {
+            @Override
+            public void onSuccess(List<New> news) {
+                if(!news.isEmpty()){
+                    for(New notice:news){
+                        New newNotice = new New();
+                        newNotice.set_id(notice.get_id());
+                        newNotice.setTitle(notice.getTitle());
+                        newNotice.setDescription(notice.getDescription());
+                        newNotice.setConverImage(notice.getConverImage());
+                        newNotice.setBody(notice.getBody());
+                        newNotice.setCreateDate(notice.getCreateDate());
+                        newNotice.setGame(notice.getGame());
+                        insertNews(newNotice);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("ERROR_REPO: ",e.getMessage());
+            }
+        };
     }
 
 

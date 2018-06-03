@@ -6,19 +6,22 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
+
 @Entity(tableName = "news_table")
 public class New {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "id")
     private String _id;
+    @SerializedName("title")
     @ColumnInfo(name = "title")
     private String title = "--*--";
     @NonNull
     @ColumnInfo(name = "cover_image")
     private String converImage;
     @ColumnInfo(name = "create_date")
-    private String createDate;
+    private String createDate="-----";
     @ColumnInfo(name = "description")
     private String description="--*--";
     @ColumnInfo(name = "body")

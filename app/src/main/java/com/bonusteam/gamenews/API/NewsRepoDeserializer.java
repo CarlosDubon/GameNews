@@ -17,6 +17,7 @@ public class NewsRepoDeserializer implements JsonDeserializer<New> {
         JsonObject repoJsonObject = json.getAsJsonObject();
         notice.set_id(repoJsonObject.get("_id").getAsString());
         notice.setTitle(repoJsonObject.get("title").getAsString());
+        notice.setDescription(repoJsonObject.get("description").getAsString());
         notice.setBody(repoJsonObject.get("body").getAsString());
         notice.setGame(repoJsonObject.get("game").getAsString());
         notice.setConverImage(repoJsonObject.get("coverImage").getAsString());

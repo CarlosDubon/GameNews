@@ -34,10 +34,10 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    public static SecurityToken securityToken;
     private RecyclerView recyclerView;
     private NewsAdapter newsAdapter;
     private GameNewsViewModel viewModel;
-    private SecurityToken securityToken;
     private TextView username,created_date;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
