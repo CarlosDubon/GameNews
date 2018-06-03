@@ -11,7 +11,7 @@
     <string name="text_categoria">Categoria</string>
     <string name="text_username">Username</string>
     <string name="text_password">Password</string>
-    <string name="text_ingresar">INGRESAR</string>
+    <string name="text_ingresar">LOG IN</string>
     <string name="text_terminos_y_condiciones">Terms and conditions</string>
     <string name="text_ups_the_credentials_are_wrongs">Ups... The credentials are wrongs</string>
 </resources>
