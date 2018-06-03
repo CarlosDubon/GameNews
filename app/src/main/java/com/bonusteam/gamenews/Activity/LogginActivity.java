@@ -37,9 +37,9 @@ public class LogginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         String savedToken = getPreferences(Context.MODE_PRIVATE).getString(TOKEN_SECURITY,"");
         if(!savedToken.equals("")){
-            securityToken = new SecurityToken(savedToken);
+            securityToken  = new SecurityToken(savedToken);
             Intent i = new Intent(LogginActivity.this,MainActivity.class);
-            i.putExtra("SECURITY_TOKEN",savedToken);
+            i.putExtra("SECURITY_TOKEN",securityToken);
             startActivity(i);
         }
         setContentView(R.layout.activity_loggin);

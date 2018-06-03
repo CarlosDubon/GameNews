@@ -3,12 +3,14 @@ package com.bonusteam.gamenews.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,9 +20,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.bonusteam.gamenews.Adapter.NewsAdapter;
 import com.bonusteam.gamenews.Entity.New;
+import com.bonusteam.gamenews.Entity.SecurityToken;
 import com.bonusteam.gamenews.Model.GameNewsViewModel;
 import com.bonusteam.gamenews.R;
 import com.squareup.picasso.Picasso;
@@ -33,6 +37,8 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     private NewsAdapter newsAdapter;
     private GameNewsViewModel viewModel;
+    private SecurityToken securityToken;
+    private TextView username,created_date;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +46,11 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent i = getIntent();
+        if(i!=null) {
+            securityToken = i.getParcelableExtra("SECURITY_TOKEN");
+            Log.d("TOKEN",securityToken.getTokenSecurity());
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -87,11 +98,6 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -101,25 +107,16 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
     public void initControls(){
         recyclerView = findViewById(R.id.recyclerview_news_general);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        username = headerView.findViewById(R.id.username_bar);
+        created_date = headerView.findViewById(R.id.date_created_bar);
+        username.setText(securityToken.getTokenSecurity());
     }
 }

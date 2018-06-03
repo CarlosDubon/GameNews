@@ -5,33 +5,34 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/News"
+            android:icon="@drawable/ic_fiber_new_white"
+            android:title="News" />
     </group>
+    <item android:title="Games">
+        <menu>
+            <item
+                android:id="@+id/item1"
+                android:title="Legue of Legends" />
+            <item
+                android:id="@+id/item2"
+                android:title="Dota" />
+            <item
+                android:id="@+id/item3"
+                android:title="CS GO" />
+        </menu>
+    </item>
 
     <item android:title="Communicate">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/favorites"
+                android:icon="@drawable/ic_favorite_grey"
+                android:title="Favorites" />
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/setting"
+                android:icon="@drawable/ic_settings_white"
+                android:title="Settings" />
         </menu>
     </item>
 
