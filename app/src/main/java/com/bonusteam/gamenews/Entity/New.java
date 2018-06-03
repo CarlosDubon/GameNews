@@ -2,6 +2,7 @@ package com.bonusteam.gamenews.Entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -25,6 +26,9 @@ public class New {
     @NonNull
     @ColumnInfo(name = "game")
     private String game;
+
+    @Ignore
+    public New(){}
 
     public New(@NonNull String _id, String title, @NonNull String converImage, String createDate, String description, String body, @NonNull String game) {
         this._id = _id;
