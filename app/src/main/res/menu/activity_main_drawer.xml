@@ -9,17 +9,9 @@
             android:icon="@drawable/ic_fiber_new_white"
             android:title="News" />
     </group>
-    <item android:title="Games">
+    <item android:title="Games" android:id="@+id/menu_games">
         <menu>
-            <item
-                android:id="@+id/item1"
-                android:title="Legue of Legends" />
-            <item
-                android:id="@+id/item2"
-                android:title="Dota" />
-            <item
-                android:id="@+id/item3"
-                android:title="CS GO" />
+
         </menu>
     </item>
 

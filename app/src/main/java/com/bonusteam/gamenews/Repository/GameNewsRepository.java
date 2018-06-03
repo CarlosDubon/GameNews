@@ -136,8 +136,6 @@ public class GameNewsRepository {
                         newNotice.setBody(notice.getBody());
                         newNotice.setCreateDate(notice.getCreated_date());
                         newNotice.setGame(notice.getGame());
-                        Log.d("NOTICA_REPO",newNotice.toString());
-                        Log.d("NOTICA_REPO_RESPONSE",notice.toString());
                         insertNews(newNotice);
                     }
                 }
@@ -146,7 +144,6 @@ public class GameNewsRepository {
             @Override
             public void onError(Throwable e) {
                 Log.d("ERROR_REPO: ",e.getMessage());
-                Log.d("ERROR_REPO: ",api.getNewsByRepo().toString());
             }
         };
     }
