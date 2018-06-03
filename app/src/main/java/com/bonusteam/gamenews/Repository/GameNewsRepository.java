@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.bonusteam.gamenews.API.GameNewsAPI;
 import com.bonusteam.gamenews.API.NewsRepoDeserializer;
+import com.bonusteam.gamenews.API.Response.NewsResponse;
 import com.bonusteam.gamenews.Activity.MainActivity;
 import com.bonusteam.gamenews.DB.GameNewsRoomDatabase;
 import com.bonusteam.gamenews.Entity.New;
@@ -96,8 +97,8 @@ public class GameNewsRepository {
 
     public void createAPI(){
         Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                .registerTypeAdapter(New.class,new NewsRepoDeserializer())
+                .setDateFormat("dd/MM/yyyy")
+                .registerTypeAdapter(NewsResponse.class,new NewsRepoDeserializer())
                 .create();
 
         OkHttpClient client = new OkHttpClient.Builder()
@@ -121,20 +122,22 @@ public class GameNewsRepository {
         api = retrofit.create(GameNewsAPI.class);
 
     }
-    private DisposableSingleObserver<List<New>> getNewsRepoObserver(){
-        return new DisposableSingleObserver<List<New>>() {
+    private DisposableSingleObserver<List<NewsResponse>> getNewsRepoObserver(){
+        return new DisposableSingleObserver<List<NewsResponse>>() {
             @Override
-            public void onSuccess(List<New> news) {
+            public void onSuccess(List<NewsResponse> news) {
                 if(!news.isEmpty()){
-                    for(New notice:news){
+                    for(NewsResponse notice:news){
                         New newNotice = new New();
                         newNotice.set_id(notice.get_id());
                         newNotice.setTitle(notice.getTitle());
                         newNotice.setDescription(notice.getDescription());
-                        newNotice.setConverImage(notice.getConverImage());
+                        newNotice.setConverImage(notice.getCoverImage());
                         newNotice.setBody(notice.getBody());
-                        newNotice.setCreateDate(notice.getCreateDate());
+                        newNotice.setCreateDate(notice.getCreated_date());
                         newNotice.setGame(notice.getGame());
+                        Log.d("NOTICA_REPO",newNotice.toString());
+                        Log.d("NOTICA_REPO_RESPONSE",notice.toString());
                         insertNews(newNotice);
                     }
                 }
@@ -143,6 +146,7 @@ public class GameNewsRepository {
             @Override
             public void onError(Throwable e) {
                 Log.d("ERROR_REPO: ",e.getMessage());
+                Log.d("ERROR_REPO: ",api.getNewsByRepo().toString());
             }
         };
     }
