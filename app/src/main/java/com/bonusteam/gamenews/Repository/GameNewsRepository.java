@@ -64,6 +64,7 @@ public class GameNewsRepository {
     public void insertUser(User user){
         new userInsertAsyncTask(userDao).execute(user);
     }
+
     public void insertNews(New news){
         new newsInsertAsyncTask(newDao).execute(news);
     }

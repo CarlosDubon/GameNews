@@ -4,10 +4,13 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,6 +30,7 @@ import com.bonusteam.gamenews.API.GameNewsAPI;
 import com.bonusteam.gamenews.Adapter.NewsAdapter;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.SecurityToken;
+import com.bonusteam.gamenews.Fragment.ViewGameNewsFragment;
 import com.bonusteam.gamenews.Model.GameNewsViewModel;
 import com.bonusteam.gamenews.R;
 import com.squareup.picasso.Picasso;
@@ -48,9 +52,12 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ViewGameNewsFragment.OnFragmentInteractionListener {
+
 
     public static SecurityToken securityToken;
+    private final static int ID_INFLATED_MENU = 101010101;
     private GameNewsAPI api;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -79,9 +86,9 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        initControls();
-        addMenuItemInNavMenuDrawer();
 
+        initControls();
+        executeGameList();
         newsAdapter = new NewsAdapter(this);
         recyclerView.setAdapter(newsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -127,7 +134,18 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        Fragment fragment = null;
+        boolean fragmentSelected = false;
+        switch (id){
+            case ID_INFLATED_MENU+0:
+                fragment = ViewGameNewsFragment.newInstance(gameList.get(0));
+                fragmentSelected=true;
+                Log.d("SELECCION","SELECCIONANDO FRAGMENTO"+fragmentSelected);
+                break;
+        }
+        if(fragmentSelected){
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_main,fragment).commit();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -144,26 +162,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void addMenuItemInNavMenuDrawer(){
-        api = createAPI();
-        compositeDisposable.add(api.getGameList()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeWith(getGameList()));
-
-        if(gameList!=null){
-
-        }else{
-            Log.d("GAMELIST","NO TENGO CONTENIDO");
-        }
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         Menu menu = navigationView.getMenu();
         MenuItem menuGames = menu.findItem(R.id.menu_games);
         menuGames.setTitle("Games");
         SubMenu subMenuGames = menuGames.getSubMenu();
         //AÑADIENDO LISTA DE JUEGOS
-
+        for(int i=0;i<gameList.size();i++){
+            subMenuGames.add(0,ID_INFLATED_MENU+i,i,gameList.get(i));
+        }
         navigationView.invalidate();
+    }
+
+    private void executeGameList(){
+        api = createAPI();
+        compositeDisposable.add(api.getGameList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(getGameList()));
     }
 
     private GameNewsAPI createAPI(){
@@ -193,7 +209,7 @@ public class MainActivity extends AppCompatActivity
             public void onSuccess(List<String> value) {
                 if(!value.isEmpty()){
                     gameList = value;
-                    Log.d("GAMELIST_ON_SUCCESS",gameList.toString());
+                    addMenuItemInNavMenuDrawer();
                 }
             }
 
@@ -202,5 +218,10 @@ public class MainActivity extends AppCompatActivity
                 Log.d("ERROR_GAME_LIST",e.getMessage());
             }
         };
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

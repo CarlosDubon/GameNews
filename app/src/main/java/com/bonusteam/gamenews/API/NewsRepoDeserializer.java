@@ -21,9 +21,16 @@ public class NewsRepoDeserializer implements JsonDeserializer<NewsResponse> {
         notice.setBody(repoJsonObject.get("body").getAsString());
         notice.setGame(repoJsonObject.get("game").getAsString());
         notice.setCreated_date(repoJsonObject.get("created_date").getAsString());
-        //Sospecha que da problemas
-        //notice.setCoverImage(repoJsonObject.get("coverImage").getAsString());
-        //notice.setDescription(repoJsonObject.get("description").getAsString());
+        if(repoJsonObject.get("coverImage")!=null) {
+            notice.setCoverImage(repoJsonObject.get("coverImage").getAsString());
+        }else{
+            notice.setCoverImage("http://");
+        }
+        if(repoJsonObject.get("description")!=null) {
+            notice.setDescription(repoJsonObject.get("description").getAsString());
+        }else{
+            notice.setDescription("--*--");
+        }
 
         return notice;
     }

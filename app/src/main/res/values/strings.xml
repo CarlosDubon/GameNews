@@ -14,4 +14,7 @@
     <string name="text_ingresar">LOG IN</string>
     <string name="text_terminos_y_condiciones">Terms and conditions</string>
     <string name="text_ups_the_credentials_are_wrongs">Ups... The credentials are wrongs</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
