@@ -13,7 +13,7 @@ import java.util.List;
 
 @Dao
 public interface NewDao {
-    @Query("SELECT * FROM news_table")
+    @Query("SELECT * FROM news_table ORDER BY create_date DESC")
     LiveData<List<New>> getAllNews();
 
     @Query("SELECT * FROM news_table WHERE game = :game")
