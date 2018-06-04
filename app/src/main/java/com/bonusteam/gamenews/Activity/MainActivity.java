@@ -1,19 +1,13 @@
 package com.bonusteam.gamenews.Activity;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.SubMenu;
@@ -32,15 +26,14 @@ import com.bonusteam.gamenews.API.GameNewsAPI;
 import com.bonusteam.gamenews.Adapter.NewsAdapter;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.SecurityToken;
+import com.bonusteam.gamenews.Fragment.MainNewsFragment;
 import com.bonusteam.gamenews.Fragment.ViewGameNewsFragment;
 import com.bonusteam.gamenews.Model.GameNewsViewModel;
 import com.bonusteam.gamenews.R;
-import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.List;
 
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
@@ -55,7 +48,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        ViewGameNewsFragment.OnFragmentInteractionListener{
+        ViewGameNewsFragment.OnFragmentInteractionListener,
+        MainNewsFragment.MainSetters,
+        MainNewsFragment.OnFragmentInteractionListener{
 
 
     public static SecurityToken securityToken;
@@ -91,10 +86,9 @@ public class MainActivity extends AppCompatActivity
 
         initControls();
         executeGameList();
-        newsAdapter = new NewsAdapter(this);
-        recyclerView.setAdapter(newsAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+
+        newsAdapter = new NewsAdapter(this);
         viewModel = ViewModelProviders.of(this).get(GameNewsViewModel.class);
         viewModel.getAllNews().observe(this, new Observer<List<New>>() {
             @Override
@@ -102,6 +96,10 @@ public class MainActivity extends AppCompatActivity
                 newsAdapter.fillNews(newList);
             }
         });
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.screen_fragment, new MainNewsFragment());
+        ft.commit();
 
     }
 
@@ -137,11 +135,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment fragment = null;
+        if(id==R.id.News_menu){
+            fragment = new MainNewsFragment();
+        }
         if(gameList!=null) {
             for (int i = 0; i < gameList.size(); i++) {
                 if (id == ID_INFLATED_MENU + i) {
-                    fragment = new ViewGameNewsFragment();
-                    Log.d("SELECT", "FRAGMENT" + gameList.get(i));
+                    fragment = ViewGameNewsFragment.newInstance(gameList.get(i));
                 }
             }
         }
@@ -156,8 +156,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
     public void initControls(){
-        recyclerView = findViewById(R.id.recyclerview_news_general);
-
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         username = headerView.findViewById(R.id.username_bar);
@@ -229,5 +227,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public void setAdapters(RecyclerView rv) {
+        rv.setAdapter(newsAdapter);
     }
 }

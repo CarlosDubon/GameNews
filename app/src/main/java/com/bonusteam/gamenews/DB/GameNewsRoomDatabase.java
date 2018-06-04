@@ -53,7 +53,6 @@ public abstract class GameNewsRoomDatabase extends RoomDatabase {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            dao.deleteAll();
             DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
             Date date = new Date();
             New notice =new New("ntc01","Fortnite presenta su nuevo modo competitivo","https://cdn2.areajugones.es/wp-content/uploads/2018/05/Fortnite-14-810x400.jpg"
