@@ -13,7 +13,7 @@ import com.bonusteam.gamenews.R;
 public class ViewGameNewsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-
+    private View view;
     private String categoryGame;
 
     public ViewGameNewsFragment() {
@@ -35,7 +35,8 @@ public class ViewGameNewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_game_news, container, false);
+        view = inflater.inflate(R.layout.fragment_view_game_news,container,false);
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

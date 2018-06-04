@@ -11,6 +11,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -53,7 +55,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        ViewGameNewsFragment.OnFragmentInteractionListener {
+        ViewGameNewsFragment.OnFragmentInteractionListener{
 
 
     public static SecurityToken securityToken;
@@ -129,22 +131,25 @@ public class MainActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
-
+    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Fragment fragment = null;
-        boolean fragmentSelected = false;
-        switch (id){
-            case ID_INFLATED_MENU+0:
-                fragment = ViewGameNewsFragment.newInstance(gameList.get(0));
-                fragmentSelected=true;
-                Log.d("SELECCION","SELECCIONANDO FRAGMENTO"+fragmentSelected);
-                break;
+        if(gameList!=null) {
+            for (int i = 0; i < gameList.size(); i++) {
+                if (id == ID_INFLATED_MENU + i) {
+                    fragment = new ViewGameNewsFragment();
+                    Log.d("SELECT", "FRAGMENT" + gameList.get(i));
+                }
+            }
         }
-        if(fragmentSelected){
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_main,fragment).commit();
+
+        if(fragment!=null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.screen_fragment,fragment).commit();
+        }else{
+            Log.d("STATUS","FRAGMENTO NULO");
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -219,6 +224,7 @@ public class MainActivity extends AppCompatActivity
             }
         };
     }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {
