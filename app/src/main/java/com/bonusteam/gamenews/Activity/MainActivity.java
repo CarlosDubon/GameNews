@@ -143,9 +143,9 @@ public class MainActivity extends AppCompatActivity
         if(gameList!=null) {
             for (int i = 0; i < gameList.size(); i++) {
                 if (id == ID_INFLATED_MENU + i) {
-                    fragment = ViewGameNewsFragment.newInstance(gameList.get(i));
                     getSupportActionBar().setElevation(0);
                     getSupportActionBar().setTitle(gameList.get(i));
+                    fragment = ViewGameNewsFragment.newInstance(gameList.get(i));
                 }
             }
         }

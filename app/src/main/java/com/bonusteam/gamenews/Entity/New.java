@@ -98,4 +98,17 @@ public class New {
     public String getGame() {
         return game;
     }
+
+    @Override
+    public String toString() {
+        return "New{" +
+                "_id='" + _id + '\'' +
+                ", title='" + title + '\'' +
+                ", converImage='" + converImage + '\'' +
+                ", createDate='" + createDate + '\'' +
+                ", description='" + description + '\'' +
+                ", body='" + body + '\'' +
+                ", game='" + game + '\'' +
+                '}';
+    }
 }

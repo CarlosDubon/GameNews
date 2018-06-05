@@ -18,14 +18,19 @@ public class MainNewsFragment extends Fragment {
     MainSetters tools;
     private RecyclerView recyclerView;
     private OnFragmentInteractionListener mListener;
+    private String game;
 
     public MainNewsFragment() {
         // Required empty public constructor
     }
 
-    public static MainNewsFragment newInstance() {
+    public static MainNewsFragment newInstance(String game) {
         MainNewsFragment fragment = new MainNewsFragment();
+        fragment.setGame(game);
         return fragment;
+    }
+    public void setGame(String game){
+        this.game = game;
     }
 
     @Override

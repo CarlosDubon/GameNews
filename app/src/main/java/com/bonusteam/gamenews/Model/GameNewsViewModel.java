@@ -14,7 +14,7 @@ import java.util.List;
 public class GameNewsViewModel extends AndroidViewModel {
     private GameNewsRepository gameNewsRepository;
     private LiveData<List<User>> userList;
-    private LiveData<List<New>>  newList;
+    private LiveData<List<New>> newList;
     public GameNewsViewModel(@NonNull Application application) {
         super(application);
         gameNewsRepository = new GameNewsRepository(application);

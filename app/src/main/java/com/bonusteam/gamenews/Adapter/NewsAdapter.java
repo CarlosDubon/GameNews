@@ -3,6 +3,7 @@ package com.bonusteam.gamenews.Adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     public NewsAdapter(Context context){
         layoutInflater = LayoutInflater.from(context);
     }
+
     public void fillNews(List<New> newList){
         this.newList = newList;
         notifyDataSetChanged();
