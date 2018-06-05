@@ -27,7 +27,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             imageNews=itemView.findViewById(R.id.imageview_news);
             title = itemView.findViewById(R.id.text_title_news);
             fab = itemView.findViewById(R.id.text_fab);
-            description = itemView.findViewById(R.id.text_description_news);
             date = itemView.findViewById(R.id.text_date_news);
             category = itemView.findViewById(R.id.text_category_news);
         }
@@ -51,7 +50,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         Picasso.get().load(newList.get(position).getConverImage()).into(holder.imageNews);
         holder.category.setText(newList.get(position).getGame());
         holder.title.setText(newList.get(position).getTitle());
-        holder.description.setText(newList.get(position).getDescription());
         holder.date.setText(newList.get(position).getCreateDate());
     }
 

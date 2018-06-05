@@ -44,9 +44,7 @@ public class ViewGameNewsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ((MainActivity)getActivity()).getSupportActionBar().setElevation(0);
-        }
+        ((MainActivity)getActivity()).getSupportActionBar().setElevation(0);
     }
 
     @Override

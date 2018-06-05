@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -36,7 +37,18 @@ public class MainNewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view =inflater.inflate(R.layout.fragment_main_news, container, false);
         recyclerView = view.findViewById(R.id.recyclerview_news_general);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        GridLayoutManager glm = new GridLayoutManager(getActivity(),2);
+        glm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if(position%5==0){
+                    return 2;
+                }else {
+                    return 1;
+                }
+            }
+        });
+        recyclerView.setLayoutManager(glm);
         tools.setAdapters(recyclerView);
         return view ;
     }
