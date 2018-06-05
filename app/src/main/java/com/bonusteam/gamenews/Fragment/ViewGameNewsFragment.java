@@ -55,7 +55,7 @@ public class ViewGameNewsFragment extends Fragment {
 
         viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
 
-        viewPagerAdapter.addFragment(new NewsByGameFragment(),"News");
+        viewPagerAdapter.addFragment(NewsByGameFragment.newInstance(categoryGame),"News");
         viewPagerAdapter.addFragment(new TopPlayerFragment(),"Top Players");
         viewPagerAdapter.addFragment(new GalleryGameFragment(),"Gallery");
 
