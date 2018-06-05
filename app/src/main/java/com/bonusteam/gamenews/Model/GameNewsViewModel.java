@@ -22,10 +22,14 @@ public class GameNewsViewModel extends AndroidViewModel {
         newList = gameNewsRepository.getAllNews();
     }
 
+    public LiveData<List<New>> getAllNews() {
+        return newList;
+    }
     public LiveData<List<User>> getAllUsers() {
         return userList;
     }
-    public LiveData<List<New>> getAllNews() {
+    public LiveData<List<New>> getNewsByGame(String game){
+        newList = gameNewsRepository.getNewsByGame(game);
         return newList;
     }
     public void insertUser(User user){

@@ -44,7 +44,6 @@ public class ViewGameNewsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((MainActivity)getActivity()).getSupportActionBar().setElevation(0);
     }
 
     @Override

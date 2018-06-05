@@ -137,11 +137,15 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         if(id==R.id.News_menu){
             fragment = new MainNewsFragment();
+            getSupportActionBar().setElevation(8);
+            getSupportActionBar().setTitle(R.string.app_name);
         }
         if(gameList!=null) {
             for (int i = 0; i < gameList.size(); i++) {
                 if (id == ID_INFLATED_MENU + i) {
                     fragment = ViewGameNewsFragment.newInstance(gameList.get(i));
+                    getSupportActionBar().setElevation(0);
+                    getSupportActionBar().setTitle(gameList.get(i));
                 }
             }
         }

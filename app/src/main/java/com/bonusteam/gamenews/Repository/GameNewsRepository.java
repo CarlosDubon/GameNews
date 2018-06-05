@@ -50,6 +50,12 @@ public class GameNewsRepository {
         createAPI();
     }
 
+    public LiveData<List<New>> getNewsByGame(String game){
+        newList = newDao.getNewsByCategory(game);
+        return newList;
+    }
+
+
     public LiveData<List<User>> getAllUsers(){
         return userList;
     }
