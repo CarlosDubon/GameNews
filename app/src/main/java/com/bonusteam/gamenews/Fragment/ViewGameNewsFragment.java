@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bonusteam.gamenews.Activity.MainActivity;
 import com.bonusteam.gamenews.Adapter.ViewPagerAdapter;
 import com.bonusteam.gamenews.R;
 
@@ -43,7 +44,9 @@ public class ViewGameNewsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ((MainActivity)getActivity()).getSupportActionBar().setElevation(0);
+        }
     }
 
     @Override
@@ -55,13 +58,11 @@ public class ViewGameNewsFragment extends Fragment {
         viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
 
         viewPagerAdapter.addFragment(new NewsByGameFragment(),"News");
+        viewPagerAdapter.addFragment(new TopPlayerFragment(),"Top Players");
+        viewPagerAdapter.addFragment(new GalleryGameFragment(),"Gallery");
 
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getActivity().getActionBar().setElevation(0);
-        }
 
         return view;
     }
