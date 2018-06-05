@@ -1,13 +1,19 @@
 package com.bonusteam.gamenews.Fragment;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bonusteam.gamenews.Adapter.ViewPagerAdapter;
 import com.bonusteam.gamenews.R;
 
 public class ViewGameNewsFragment extends Fragment {
@@ -15,6 +21,9 @@ public class ViewGameNewsFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private View view;
     private String categoryGame;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
 
     public ViewGameNewsFragment() {
         // Required empty public constructor
@@ -22,24 +31,41 @@ public class ViewGameNewsFragment extends Fragment {
 
     public static ViewGameNewsFragment newInstance(String categoryGame) {
         ViewGameNewsFragment fragment = new ViewGameNewsFragment();
-        fragment.categoryGame = categoryGame;
+        fragment.setCategoryGame(categoryGame);
         return fragment;
+    }
+
+
+    public void setCategoryGame(String categoryGame){
+        this.categoryGame = categoryGame;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_view_game_news,container,false);
+        tabLayout = view.findViewById(R.id.tablayout_news);
+        viewPager = view.findViewById(R.id.viewpager_news);
+
+        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
+
+        viewPagerAdapter.addFragment(new NewsByGameFragment(),"News");
+
+        viewPager.setAdapter(viewPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getActivity().getActionBar().setElevation(0);
+        }
+
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);

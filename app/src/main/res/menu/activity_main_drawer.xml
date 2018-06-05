@@ -11,7 +11,9 @@
     </group>
     <item android:title="Games" android:id="@+id/menu_games">
         <menu>
+            <group android:checkableBehavior="single" android:id="@+id/grup_games">
 
+            </group>
         </menu>
     </item>
 

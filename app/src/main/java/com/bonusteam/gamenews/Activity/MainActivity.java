@@ -172,7 +172,7 @@ public class MainActivity extends AppCompatActivity
         SubMenu subMenuGames = menuGames.getSubMenu();
         //AÑADIENDO LISTA DE JUEGOS
         for(int i=0;i<gameList.size();i++){
-            subMenuGames.add(0,ID_INFLATED_MENU+i,i,gameList.get(i));
+            subMenuGames.add(R.id.grup_games,ID_INFLATED_MENU+i,i,gameList.get(i)).setCheckable(true);
         }
         navigationView.invalidate();
     }
