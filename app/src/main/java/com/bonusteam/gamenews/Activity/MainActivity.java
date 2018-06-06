@@ -147,6 +147,9 @@ public class MainActivity extends AppCompatActivity
             fragment = new MainNewsFragment();
             actionBar.setElevation(8);
             actionBar.setTitle(R.string.app_name);
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.screen_fragment, fragment);
+            ft.commit();
         }
         if(gameList!=null) {
             for (int i = 0; i < gameList.size(); i++) {

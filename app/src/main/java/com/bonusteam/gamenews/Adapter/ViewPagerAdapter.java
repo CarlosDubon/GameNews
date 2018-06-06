@@ -36,4 +36,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         fragmentList.add(fragment);
         titleList.add(title);
     }
+    public void clearFragments(){
+        if(!fragmentList.isEmpty() && !titleList.isEmpty()) {
+            fragmentList.clear();
+            titleList.clear();
+
+        }
+    }
 }

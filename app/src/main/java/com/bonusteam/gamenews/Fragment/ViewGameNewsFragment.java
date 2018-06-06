@@ -53,6 +53,9 @@ public class ViewGameNewsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
+        viewPagerAdapter.clearFragments();
+        newsAdapter = new NewsAdapter(getActivity());
+        playersAdapter = new PlayersAdapter(getActivity());
 
         viewModel = ViewModelProviders.of(this).get(GameNewsViewModel.class);
         viewModel.getNewsByGame(categoryGame).observe(this, new Observer<List<New>>() {
@@ -61,7 +64,6 @@ public class ViewGameNewsFragment extends Fragment {
                 newsAdapter.fillNews(newList);
             }
         });
-        newsAdapter = new NewsAdapter(getActivity());
 
         viewModel.getPlayersByGame(categoryGame).observe(this,new Observer<List<Player>>(){
             @Override
@@ -69,13 +71,13 @@ public class ViewGameNewsFragment extends Fragment {
                 playersAdapter.fillPlayers(playerList);
             }
         });
-        playersAdapter = new PlayersAdapter(getActivity());
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_game_news,container,false);
+
 
         viewPagerAdapter.addFragment(NewsByGameFragment.newInstance(newsAdapter),"News");
         viewPagerAdapter.addFragment(TopPlayerFragment.newInstance(playersAdapter),"Top Players");
