@@ -36,7 +36,6 @@ public class PlayersAdapter  extends RecyclerView.Adapter<PlayersAdapter.Players
     }
     public void fillPlayers(List<Player> playerList){
         this.playerList = playerList;
-        Log.d("ADAPTER",this.playerList.toString());
         notifyDataSetChanged();
     }
     @NonNull
