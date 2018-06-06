@@ -27,6 +27,7 @@ public interface GameNewsAPI {
     /**ENDPOINTS ABOUT NEWS**/
     @GET("/news")
     Single<List<NewsResponse>> getNewsByRepo();
+
     @GET("/news/type/list")
     Single<List<String>> getGameList();
 
