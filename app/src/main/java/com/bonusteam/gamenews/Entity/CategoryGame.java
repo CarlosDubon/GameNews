@@ -12,4 +12,23 @@ public class CategoryGame {
     @ColumnInfo(name = "category_name")
     private String categoryName;
 
+    public CategoryGame(@NonNull String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    @NonNull
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(@NonNull String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    @Override
+    public String toString() {
+        return "CategoryGame{" +
+                "categoryName='" + categoryName + '\'' +
+                '}';
+    }
 }

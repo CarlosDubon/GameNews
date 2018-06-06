@@ -12,9 +12,11 @@ import com.bonusteam.gamenews.API.Response.NewsResponse;
 import com.bonusteam.gamenews.API.Response.PlayersResponse;
 import com.bonusteam.gamenews.Activity.MainActivity;
 import com.bonusteam.gamenews.DB.GameNewsRoomDatabase;
+import com.bonusteam.gamenews.Entity.CategoryGame;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.Player;
 import com.bonusteam.gamenews.Entity.User;
+import com.bonusteam.gamenews.Interface.CategoryGameDao;
 import com.bonusteam.gamenews.Interface.NewDao;
 import com.bonusteam.gamenews.Interface.PlayerDao;
 import com.bonusteam.gamenews.Interface.UserDao;
@@ -43,19 +45,37 @@ public class GameNewsRepository {
     private UserDao userDao;
     private NewDao newDao;
     private PlayerDao playerDao;
+    private CategoryGameDao gameDao;
     private LiveData<List<User>> userList;
     private LiveData<List<New>> newList;
     private LiveData<List<Player>> playerList;
+    private LiveData<List<CategoryGame>> gameList;
 
     public GameNewsRepository(Application application){
         GameNewsRoomDatabase db = GameNewsRoomDatabase.getDatabase(application);
         userDao = db.userDao();
         newDao = db.newDao();
         playerDao = db.playerDao();
+        gameDao = db.categoryGameDao();
+
         userList = userDao.getAllUsers();
         newList = newDao.getAllNews();
         playerList = playerDao.getAllPlayer();
+        gameList = gameDao.getAllCategories();
         createAPI();
+    }
+
+    public LiveData<List<CategoryGame>> getAllGames(){
+        api = getGamesFromAPI();
+        disposable.add(api.getGameList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(getGameList()));
+        return gameList;
+    }
+
+    public void insertGame(CategoryGame game){
+        new categoryInsertAsyncTask(gameDao).execute(game);
     }
 
     public LiveData<List<New>> getNewsByGame(String game){
@@ -96,6 +116,19 @@ public class GameNewsRepository {
 
     public void insertPlayer(Player player){
         new playerInsertAsyncTask(playerDao).execute(player);
+    }
+
+    private static class categoryInsertAsyncTask extends AsyncTask<CategoryGame,Void,Void>{
+        private CategoryGameDao gameDao;
+
+        public categoryInsertAsyncTask(CategoryGameDao gameDao){
+            this.gameDao = gameDao;
+        }
+        @Override
+        protected Void doInBackground(CategoryGame... categoryGames) {
+            gameDao.insertCategory(categoryGames[0]);
+            return null;
+        }
     }
 
     private static class playerInsertAsyncTask extends AsyncTask<Player,Void,Void>{
@@ -239,6 +272,45 @@ public class GameNewsRepository {
             @Override
             public void onError(Throwable e) {
                 Log.d("ERROR_REPO",e.getMessage());
+            }
+        };
+    }
+
+    private GameNewsAPI getGamesFromAPI(){
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request().newBuilder()
+                                .addHeader("Authorization","Bearer "+ MainActivity.securityToken.getTokenSecurity())
+                                .build();
+                        return chain.proceed(request);
+                    }
+                }).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(GameNewsAPI.ENDPOINT)
+                .client(client)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        return retrofit.create(GameNewsAPI.class);
+    }
+
+    private DisposableSingleObserver<List<String>> getGameList(){
+        return new DisposableSingleObserver<List<String>>() {
+            @Override
+            public void onSuccess(List<String> games) {
+                if(!games.isEmpty()){
+                    for(String game:games){
+                        insertGame(new CategoryGame(game));
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("ERROR_GAME_LIST",e.getMessage());
             }
         };
     }

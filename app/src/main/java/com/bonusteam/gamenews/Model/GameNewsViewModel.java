@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
+import com.bonusteam.gamenews.Entity.CategoryGame;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.Player;
 import com.bonusteam.gamenews.Entity.User;
@@ -17,6 +18,7 @@ public class GameNewsViewModel extends AndroidViewModel {
     private LiveData<List<User>> userList;
     private LiveData<List<New>> newList;
     private LiveData<List<Player>> playerList;
+
     public GameNewsViewModel(@NonNull Application application) {
         super(application);
         gameNewsRepository = new GameNewsRepository(application);
@@ -42,11 +44,9 @@ public class GameNewsViewModel extends AndroidViewModel {
         playerList = gameNewsRepository.getPlayersByGame(game);
         return playerList;
     }
-    public void insertUser(User user){
-        gameNewsRepository.insertUser(user);
-    }
 
-    public void insertNew(New newObj){
-        gameNewsRepository.insertNews(newObj);
+    public LiveData<List<CategoryGame>> getGameList() {
+        LiveData<List<CategoryGame>> gameList = gameNewsRepository.getAllGames();
+        return gameList;
     }
 }

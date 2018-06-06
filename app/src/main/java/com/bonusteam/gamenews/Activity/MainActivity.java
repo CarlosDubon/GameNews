@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.bonusteam.gamenews.API.GameNewsAPI;
 import com.bonusteam.gamenews.Adapter.NewsAdapter;
+import com.bonusteam.gamenews.Entity.CategoryGame;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.SecurityToken;
 import com.bonusteam.gamenews.Fragment.MainNewsFragment;
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity
     private NewsAdapter newsAdapter;
     private GameNewsViewModel viewModel;
     private TextView username,created_date;
-    private List<String> gameList;
+    private List<CategoryGame> gameList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +74,6 @@ public class MainActivity extends AppCompatActivity
         Intent i = getIntent();
         if(i!=null) {
             securityToken = i.getParcelableExtra("SECURITY_TOKEN");
-            Log.d("TOKEN",securityToken.getTokenSecurity());
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -85,8 +85,6 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         initControls();
-        executeGameList();
-
 
         newsAdapter = new NewsAdapter(this);
         viewModel = ViewModelProviders.of(this).get(GameNewsViewModel.class);
@@ -96,11 +94,23 @@ public class MainActivity extends AppCompatActivity
                 newsAdapter.fillNews(newList);
             }
         });
+        executeGameList();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.screen_fragment, new MainNewsFragment());
         ft.commit();
 
+    }
+
+    private void executeGameList() {
+        viewModel.getGameList().observe(this, new Observer<List<CategoryGame>>() {
+            @Override
+            public void onChanged(@Nullable List<CategoryGame> categoryGames) {
+                gameList = categoryGames;
+                Log.d("LISTA GAMES",gameList.toString());
+                addMenuItemInNavMenuDrawer();
+            }
+        });
     }
 
     @Override
@@ -144,8 +154,8 @@ public class MainActivity extends AppCompatActivity
             for (int i = 0; i < gameList.size(); i++) {
                 if (id == ID_INFLATED_MENU + i) {
                     getSupportActionBar().setElevation(0);
-                    getSupportActionBar().setTitle(gameList.get(i));
-                    fragment = ViewGameNewsFragment.newInstance(gameList.get(i));
+                    getSupportActionBar().setTitle(gameList.get(i).getCategoryName());
+                    fragment = ViewGameNewsFragment.newInstance(gameList.get(i).getCategoryName());
                 }
             }
         }
@@ -176,55 +186,9 @@ public class MainActivity extends AppCompatActivity
         SubMenu subMenuGames = menuGames.getSubMenu();
         //AÑADIENDO LISTA DE JUEGOS
         for(int i=0;i<gameList.size();i++){
-            subMenuGames.add(R.id.grup_games,ID_INFLATED_MENU+i,i,gameList.get(i)).setCheckable(true);
+            subMenuGames.add(R.id.grup_games,ID_INFLATED_MENU+i,i,gameList.get(i).getCategoryName()).setCheckable(true);
         }
         navigationView.invalidate();
-    }
-
-    private void executeGameList(){
-        api = createAPI();
-        compositeDisposable.add(api.getGameList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(getGameList()));
-    }
-
-    private GameNewsAPI createAPI(){
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public Response intercept(Chain chain) throws IOException {
-                        Request request = chain.request().newBuilder()
-                                .addHeader("Authorization","Bearer "+ securityToken.getTokenSecurity())
-                                .build();
-                        return chain.proceed(request);
-                    }
-                }).build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(GameNewsAPI.ENDPOINT)
-                .client(client)
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        return retrofit.create(GameNewsAPI.class);
-    }
-
-    private DisposableSingleObserver<List<String>> getGameList(){
-        return new DisposableSingleObserver<List<String>>() {
-            @Override
-            public void onSuccess(List<String> value) {
-                if(!value.isEmpty()){
-                    gameList = value;
-                    addMenuItemInNavMenuDrawer();
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                Log.d("ERROR_GAME_LIST",e.getMessage());
-            }
-        };
     }
 
 
