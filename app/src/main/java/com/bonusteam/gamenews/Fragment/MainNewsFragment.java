@@ -17,7 +17,6 @@ public class MainNewsFragment extends Fragment {
     View view;
     MainSetters tools;
     private RecyclerView recyclerView;
-    private OnFragmentInteractionListener mListener;
     private String game;
 
     public MainNewsFragment() {
@@ -58,11 +57,6 @@ public class MainNewsFragment extends Fragment {
         return view ;
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     public interface MainSetters {
         void setAdapters(RecyclerView rv);
@@ -71,13 +65,6 @@ public class MainNewsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-
         if(context instanceof MainSetters){
             tools = (MainSetters) context;
         }
@@ -86,12 +73,7 @@ public class MainNewsFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
         tools =null;
     }
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }

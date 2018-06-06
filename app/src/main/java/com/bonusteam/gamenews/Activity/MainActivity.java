@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.SubMenu;
@@ -49,21 +50,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        ViewGameNewsFragment.OnFragmentInteractionListener,
-        MainNewsFragment.MainSetters,
-        MainNewsFragment.OnFragmentInteractionListener{
+        MainNewsFragment.MainSetters{
 
 
     public static SecurityToken securityToken;
     private final static int ID_INFLATED_MENU = 101010101;
-    private GameNewsAPI api;
-    private CompositeDisposable compositeDisposable = new CompositeDisposable();
-
-    private RecyclerView recyclerView;
     private NewsAdapter newsAdapter;
     private GameNewsViewModel viewModel;
     private TextView username,created_date;
     private List<CategoryGame> gameList;
+    private ActionBar actionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,6 +82,15 @@ public class MainActivity extends AppCompatActivity
 
         initControls();
 
+        executeLists();
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.screen_fragment, new MainNewsFragment());
+        ft.commit();
+
+    }
+
+    private void executeLists() {
         newsAdapter = new NewsAdapter(this);
         viewModel = ViewModelProviders.of(this).get(GameNewsViewModel.class);
         viewModel.getAllNews().observe(this, new Observer<List<New>>() {
@@ -94,20 +99,13 @@ public class MainActivity extends AppCompatActivity
                 newsAdapter.fillNews(newList);
             }
         });
-        executeGameList();
-
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.screen_fragment, new MainNewsFragment());
-        ft.commit();
-
-    }
-
-    private void executeGameList() {
         viewModel.getGameList().observe(this, new Observer<List<CategoryGame>>() {
             @Override
             public void onChanged(@Nullable List<CategoryGame> categoryGames) {
+                if(gameList!=null){
+                    gameList.clear();
+                }
                 gameList = categoryGames;
-                Log.d("LISTA GAMES",gameList.toString());
                 addMenuItemInNavMenuDrawer();
             }
         });
@@ -147,29 +145,28 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = null;
         if(id==R.id.News_menu){
             fragment = new MainNewsFragment();
-            getSupportActionBar().setElevation(8);
-            getSupportActionBar().setTitle(R.string.app_name);
+            actionBar.setElevation(8);
+            actionBar.setTitle(R.string.app_name);
         }
         if(gameList!=null) {
             for (int i = 0; i < gameList.size(); i++) {
                 if (id == ID_INFLATED_MENU + i) {
-                    getSupportActionBar().setElevation(0);
-                    getSupportActionBar().setTitle(gameList.get(i).getCategoryName());
+                    actionBar.setElevation(0);
+                    actionBar.setTitle(gameList.get(i).getCategoryName());
                     fragment = ViewGameNewsFragment.newInstance(gameList.get(i).getCategoryName());
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.replace(R.id.screen_fragment, fragment);
+                    ft.commit();
                 }
             }
         }
 
-        if(fragment!=null){
-            getSupportFragmentManager().beginTransaction().replace(R.id.screen_fragment,fragment).commit();
-        }else{
-            Log.d("STATUS","FRAGMENTO NULO");
-        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
     public void initControls(){
+        actionBar = getSupportActionBar();
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         username = headerView.findViewById(R.id.username_bar);
@@ -185,17 +182,13 @@ public class MainActivity extends AppCompatActivity
         menuGames.setTitle("Games");
         SubMenu subMenuGames = menuGames.getSubMenu();
         //AÑADIENDO LISTA DE JUEGOS
+        subMenuGames.clear();
         for(int i=0;i<gameList.size();i++){
             subMenuGames.add(R.id.grup_games,ID_INFLATED_MENU+i,i,gameList.get(i).getCategoryName()).setCheckable(true);
         }
         navigationView.invalidate();
     }
 
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
-    }
 
     @Override
     public void setAdapters(RecyclerView rv) {

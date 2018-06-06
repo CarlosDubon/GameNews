@@ -26,12 +26,9 @@ import java.util.List;
 
 public class ViewGameNewsFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
-
     private NewsAdapter newsAdapter;
     private PlayersAdapter playersAdapter;
     private GameNewsViewModel viewModel;
-    private View view;
     private String categoryGame;
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -55,12 +52,7 @@ public class ViewGameNewsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_view_game_news,container,false);
+        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
 
         viewModel = ViewModelProviders.of(this).get(GameNewsViewModel.class);
         viewModel.getNewsByGame(categoryGame).observe(this, new Observer<List<New>>() {
@@ -77,14 +69,17 @@ public class ViewGameNewsFragment extends Fragment {
                 playersAdapter.fillPlayers(playerList);
             }
         });
-
         playersAdapter = new PlayersAdapter(getActivity());
 
+    }
 
-        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_view_game_news,container,false);
+
         viewPagerAdapter.addFragment(NewsByGameFragment.newInstance(newsAdapter),"News");
         viewPagerAdapter.addFragment(TopPlayerFragment.newInstance(playersAdapter),"Top Players");
-        viewPagerAdapter.addFragment(TopPlayerFragment.newInstance(playersAdapter),"Gallery");
+        viewPagerAdapter.addFragment(new GalleryGameFragment(),"Gallery");
 
         tabLayout = view.findViewById(R.id.tablayout_news);
         viewPager = view.findViewById(R.id.viewpager_news);
@@ -95,31 +90,6 @@ public class ViewGameNewsFragment extends Fragment {
         return view;
     }
 
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 }
