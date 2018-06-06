@@ -1,6 +1,7 @@
 package com.bonusteam.gamenews.API;
 
 import com.bonusteam.gamenews.API.Response.NewsResponse;
+import com.bonusteam.gamenews.API.Response.PlayersResponse;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.SecurityToken;
 
@@ -28,6 +29,11 @@ public interface GameNewsAPI {
     Single<List<NewsResponse>> getNewsByRepo();
     @GET("/news/type/list")
     Single<List<String>> getGameList();
+
+    /**ENDS POINTS ABOUT PLAYERS**/
+    @GET("/players")
+    Single<List<PlayersResponse>> getAllPlayers();
+
 
 
 }

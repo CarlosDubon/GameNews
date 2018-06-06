@@ -7,12 +7,16 @@ import android.util.Log;
 
 import com.bonusteam.gamenews.API.GameNewsAPI;
 import com.bonusteam.gamenews.API.NewsRepoDeserializer;
+import com.bonusteam.gamenews.API.PlayerRepoDeserializer;
 import com.bonusteam.gamenews.API.Response.NewsResponse;
+import com.bonusteam.gamenews.API.Response.PlayersResponse;
 import com.bonusteam.gamenews.Activity.MainActivity;
 import com.bonusteam.gamenews.DB.GameNewsRoomDatabase;
 import com.bonusteam.gamenews.Entity.New;
+import com.bonusteam.gamenews.Entity.Player;
 import com.bonusteam.gamenews.Entity.User;
 import com.bonusteam.gamenews.Interface.NewDao;
+import com.bonusteam.gamenews.Interface.PlayerDao;
 import com.bonusteam.gamenews.Interface.UserDao;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,15 +42,19 @@ public class GameNewsRepository {
     private CompositeDisposable disposable = new CompositeDisposable();
     private UserDao userDao;
     private NewDao newDao;
+    private PlayerDao playerDao;
     private LiveData<List<User>> userList;
     private LiveData<List<New>> newList;
+    private LiveData<List<Player>> playerList;
 
     public GameNewsRepository(Application application){
         GameNewsRoomDatabase db = GameNewsRoomDatabase.getDatabase(application);
         userDao = db.userDao();
         newDao = db.newDao();
+        playerDao = db.playerDao();
         userList = userDao.getAllUsers();
         newList = newDao.getAllNews();
+        playerList = playerDao.getAllPlayer();
         createAPI();
     }
 
@@ -55,6 +63,14 @@ public class GameNewsRepository {
         return newList;
     }
 
+    public LiveData<List<Player>> getAllPlayer(){
+        api = getPlayersFromAPI();
+        disposable.add(api.getAllPlayers()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribeWith(getPlayerRepoResponse()));
+        return playerList;
+    }
 
     public LiveData<List<User>> getAllUsers(){
         return userList;
@@ -75,6 +91,22 @@ public class GameNewsRepository {
         new newsInsertAsyncTask(newDao).execute(news);
     }
 
+    public void insertPlayer(Player player){
+        new playerInsertAsyncTask(playerDao).execute(player);
+    }
+
+    private static class playerInsertAsyncTask extends AsyncTask<Player,Void,Void>{
+        private PlayerDao playerDao;
+
+        public playerInsertAsyncTask(PlayerDao playerDao){
+            this.playerDao = playerDao;
+        }
+        @Override
+        protected Void doInBackground(Player... players) {
+            playerDao.insertPayer(players[0]);
+            return null;
+        }
+    }
     private static class userInsertAsyncTask extends AsyncTask<User,Void,Void>{
         private UserDao userDao;
 
@@ -102,7 +134,9 @@ public class GameNewsRepository {
         }
     }
 
-    public void createAPI(){
+
+
+    private void createAPI(){
         Gson gson = new GsonBuilder()
                 .setDateFormat("dd/MM/yyyy")
                 .registerTypeAdapter(NewsResponse.class,new NewsRepoDeserializer())
@@ -155,5 +189,55 @@ public class GameNewsRepository {
         };
     }
 
+    private GameNewsAPI getPlayersFromAPI(){
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(PlayersResponse.class,new PlayerRepoDeserializer())
+                .create();
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request newRequest = chain.request().newBuilder()
+                                .addHeader("Authorization","Bearer "+ MainActivity.securityToken.getTokenSecurity())
+                                .build();
+                        return chain.proceed(newRequest);
+                    }
+
+                }).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(GameNewsAPI.ENDPOINT)
+                .client(client)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        api = retrofit.create(GameNewsAPI.class);
+        return api;
+    }
+
+    private DisposableSingleObserver<List<PlayersResponse>> getPlayerRepoResponse(){
+        return new DisposableSingleObserver<List<PlayersResponse>>() {
+            @Override
+            public void onSuccess(List<PlayersResponse> players) {
+                if(!players.isEmpty()){
+                    for(PlayersResponse player:players){
+                        Player p = new Player();
+                        p.set_id(player.get_id());
+                        p.setAvatar(player.getAvatar());
+                        p.setBiografia(player.getBiografia());
+                        p.setGame(player.getGame());
+                        p.setName(player.getName());
+                        insertPlayer(p);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("ERROR_REPO",e.getMessage());
+            }
+        };
+    }
 
 }

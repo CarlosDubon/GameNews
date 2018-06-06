@@ -1,26 +1,24 @@
 package com.bonusteam.gamenews.Fragment;
 
-import android.app.ActionBar;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bonusteam.gamenews.Activity.MainActivity;
 import com.bonusteam.gamenews.Adapter.NewsAdapter;
+import com.bonusteam.gamenews.Adapter.PlayersAdapter;
 import com.bonusteam.gamenews.Adapter.ViewPagerAdapter;
 import com.bonusteam.gamenews.Entity.New;
+import com.bonusteam.gamenews.Entity.Player;
+import com.bonusteam.gamenews.Entity.User;
 import com.bonusteam.gamenews.Model.GameNewsViewModel;
 import com.bonusteam.gamenews.R;
 
@@ -29,7 +27,9 @@ import java.util.List;
 public class ViewGameNewsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-    private NewsAdapter adapter;
+
+    private NewsAdapter newsAdapter;
+    private PlayersAdapter playersAdapter;
     private GameNewsViewModel viewModel;
     private View view;
     private String categoryGame;
@@ -55,12 +55,7 @@ public class ViewGameNewsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("FRAGMENTO CON TOOLBAR",categoryGame);
-        adapter = new NewsAdapter(getActivity());
-        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
-        viewPagerAdapter.addFragment(NewsByGameFragment.newInstance(adapter),"News");
-        viewPagerAdapter.addFragment(new TopPlayerFragment(),"Top Players");
-        viewPagerAdapter.addFragment(new GalleryGameFragment(),"Gallery");
+
     }
 
     @Override
@@ -71,9 +66,25 @@ public class ViewGameNewsFragment extends Fragment {
         viewModel.getNewsByGame(categoryGame).observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> newList) {
-                adapter.fillNews(newList);
+                newsAdapter.fillNews(newList);
             }
         });
+        newsAdapter = new NewsAdapter(getActivity());
+
+        viewModel.getAllPlayers().observe(this,new Observer<List<Player>>(){
+            @Override
+            public void onChanged(@Nullable List<Player> playerList) {
+                playersAdapter.fillPlayers(playerList);
+            }
+        });
+
+        playersAdapter = new PlayersAdapter(getActivity());
+
+
+        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
+        viewPagerAdapter.addFragment(NewsByGameFragment.newInstance(newsAdapter),"News");
+        viewPagerAdapter.addFragment(new TopPlayerFragment(),"Top Players");
+        viewPagerAdapter.addFragment(new GalleryGameFragment(),"Gallery");
 
         tabLayout = view.findViewById(R.id.tablayout_news);
         viewPager = view.findViewById(R.id.viewpager_news);

@@ -9,18 +9,21 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.bonusteam.gamenews.Entity.New;
+import com.bonusteam.gamenews.Entity.Player;
 import com.bonusteam.gamenews.Entity.User;
 import com.bonusteam.gamenews.Interface.NewDao;
+import com.bonusteam.gamenews.Interface.PlayerDao;
 import com.bonusteam.gamenews.Interface.UserDao;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Database(entities = {New.class, User.class},version = 1)
+@Database(entities = {New.class, User.class, Player.class},version = 1)
 public abstract class GameNewsRoomDatabase extends RoomDatabase {
     public abstract UserDao userDao();
     public abstract NewDao newDao();
+    public abstract PlayerDao playerDao();
 
     private static GameNewsRoomDatabase INSTANCE;
 
