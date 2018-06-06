@@ -71,4 +71,15 @@ public class Player {
     public void setGame(@NonNull String game) {
         this.game = game;
     }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "_id='" + _id + '\'' +
+                ", name='" + name + '\'' +
+                ", biografia='" + biografia + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", game='" + game + '\'' +
+                '}';
+    }
 }

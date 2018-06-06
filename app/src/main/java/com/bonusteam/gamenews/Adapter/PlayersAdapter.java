@@ -3,6 +3,7 @@ package com.bonusteam.gamenews.Adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ public class PlayersAdapter  extends RecyclerView.Adapter<PlayersAdapter.Players
     }
     public void fillPlayers(List<Player> playerList){
         this.playerList = playerList;
+        Log.d("ADAPTER",this.playerList.toString());
         notifyDataSetChanged();
     }
     @NonNull
@@ -48,7 +50,7 @@ public class PlayersAdapter  extends RecyclerView.Adapter<PlayersAdapter.Players
     public void onBindViewHolder(@NonNull PlayersViewHolder holder, int position) {
         Picasso.get().load(playerList.get(position).getAvatar()).into(holder.avatar);
         holder.name.setText(playerList.get(position).getName());
-        holder.ranking.setText("Ranking "+position);
+        holder.ranking.setText("Ranking "+(position+1));
     }
 
     @Override

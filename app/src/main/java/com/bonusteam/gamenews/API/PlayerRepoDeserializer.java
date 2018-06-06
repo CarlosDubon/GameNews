@@ -26,7 +26,9 @@ public class PlayerRepoDeserializer implements JsonDeserializer<PlayersResponse>
             response.setBiografia("--*--");
         }
         if(object.get("avatar")!=null){
-            response.setAvatar(object.get("avatar").getAsString());
+            if(!object.get("avatar").getAsString().equals("http://.../img.png")) {
+                response.setAvatar(object.get("avatar").getAsString());
+            }
         }else{
             response.setAvatar("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSj9tu041mqm6g3UrEvWgGjfjZfn4OXsGfiffQDB82-Psxa52L3AA");
         }

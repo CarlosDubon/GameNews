@@ -28,9 +28,6 @@ import java.util.List;
 public class NewsByGameFragment extends Fragment {
 
     View view;
-    private ViewGameNewsFragment.OnFragmentInteractionListener mListener;
-    private String game="";
-    private GameNewsViewModel viewModel;
     private NewsAdapter adapter;
     private RecyclerView rv;
     public NewsByGameFragment() {
@@ -59,28 +56,6 @@ public class NewsByGameFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.setAdapter(adapter);
         return view;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof ViewGameNewsFragment.OnFragmentInteractionListener) {
-            mListener = (ViewGameNewsFragment.OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
 }

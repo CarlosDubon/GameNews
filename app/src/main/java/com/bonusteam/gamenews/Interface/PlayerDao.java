@@ -19,5 +19,6 @@ public interface PlayerDao {
     LiveData<List<Player>> getAllPlayer();
 
     @Query("SELECT * FROM player_table WHERE game = :game")
-    LiveData<List<Player>> getAllPlayer(String game);
+    LiveData<List<Player>> getAllPlayerByGame(String game);
+
 }

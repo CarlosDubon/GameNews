@@ -62,7 +62,10 @@ public class GameNewsRepository {
         newList = newDao.getNewsByCategory(game);
         return newList;
     }
-
+    public LiveData<List<Player>> getPlayersByGame(String game){
+        playerList = playerDao.getAllPlayerByGame(game);
+        return playerList;
+    }
     public LiveData<List<Player>> getAllPlayer(){
         api = getPlayersFromAPI();
         disposable.add(api.getAllPlayers()

@@ -24,7 +24,7 @@ public class TopPlayerFragment extends Fragment {
 
     public static TopPlayerFragment newInstance(PlayersAdapter adapter) {
         TopPlayerFragment fragment = new TopPlayerFragment();
-
+        fragment.setAdapter(adapter);
         return fragment;
     }
     public void setAdapter(PlayersAdapter adapter){
