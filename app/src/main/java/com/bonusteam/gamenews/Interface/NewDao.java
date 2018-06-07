@@ -20,6 +20,9 @@ public interface NewDao {
     LiveData<List<New>> getNewsByCategory(String game);
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertNew(New news);
+    @Query("SELECT * FROM news_table WHERE id = :id")
+    LiveData<New> getNew(String id);
+
     @Query("DELETE FROM news_table")
     void deleteAll();
 }

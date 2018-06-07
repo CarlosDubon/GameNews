@@ -49,15 +49,13 @@ public class NewsContainerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
-        newsAdapter = new NewsAdapter(getActivity());
-        playersAdapter = new PlayersAdapter(getActivity());
-
+        viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
         model = ViewModelProviders.of(this).get(GameNewsViewModel.class);
         model.getNewsByGame(game).observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> newList) {
                 newsAdapter.fillNews(newList);
+
             }
         });
         model.getPlayersByGame(game).observe(this, new Observer<List<Player>>() {
@@ -66,9 +64,6 @@ public class NewsContainerFragment extends Fragment {
                 playersAdapter.fillPlayers(playerList);
             }
         });
-
-        viewPagerAdapter.addFragment(NewsByGameFragment.newInstance(newsAdapter),"News");
-        viewPagerAdapter.addFragment(TopPlayerFragment.newInstance(playersAdapter),"TOP PLAYERS");
 
 
     }
@@ -80,8 +75,18 @@ public class NewsContainerFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tablayout_fragment_container);
         viewPager = view.findViewById(R.id.viewpager_fragment_container);
 
+        newsAdapter = new NewsAdapter(view.getContext());
+        playersAdapter = new PlayersAdapter(view.getContext());
+
         viewPager.setAdapter(viewPagerAdapter);
+
+        viewPagerAdapter.addFragment(NewsByGameFragment.newInstance(newsAdapter),"News");
+        viewPagerAdapter.addFragment(TopPlayerFragment.newInstance(playersAdapter),"TOP PLAYERS");
+
+        viewPagerAdapter.notifyDataSetChanged();
+
         tabLayout.setupWithViewPager(viewPager);
+        //viewPager.setCurrentItem(0);
         return view;
     }
 }

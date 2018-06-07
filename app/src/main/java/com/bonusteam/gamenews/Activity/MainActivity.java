@@ -2,6 +2,7 @@ package com.bonusteam.gamenews.Activity;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -44,17 +45,15 @@ public class MainActivity extends AppCompatActivity
     private TextView username,created_date;
     private List<CategoryGame> gameList;
     private ActionBar actionBar;
+    public static String TOKEN_SECURITY = "SECURITY_PREFERENCE_TOKEN";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        securityToken = new SecurityToken(getPreferences(Context.MODE_PRIVATE).getString(TOKEN_SECURITY,""));
 
-        Intent i = getIntent();
-        if(i!=null) {
-            securityToken = i.getParcelableExtra("SECURITY_TOKEN");
-        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -134,20 +133,24 @@ public class MainActivity extends AppCompatActivity
 
         }
 
+        int i = 0;
         if(gameList!=null) {
-            for (int i = 0; i < gameList.size(); i++) {
+            for (i = 0; i < gameList.size(); i++) {
                 if (id == ID_INFLATED_MENU + i) {
                     actionBar.setElevation(0);
                     actionBar.setTitle(gameList.get(i).getCategoryName());
                     fragment = NewsContainerFragment.newInstance(gameList.get(i).getCategoryName());
+                    break;
                 }
             }
         }
+
         if(fragment!=null){
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.screen_fragment, fragment);
             ft.commit();
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

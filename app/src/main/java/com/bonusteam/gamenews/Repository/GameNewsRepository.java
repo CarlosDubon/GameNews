@@ -74,6 +74,10 @@ public class GameNewsRepository {
         return gameList;
     }
 
+    public LiveData<New> getNew(String id){
+        return newDao.getNew(id);
+    }
+
     public void insertGame(CategoryGame game){
         new categoryInsertAsyncTask(gameDao).execute(game);
     }

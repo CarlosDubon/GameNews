@@ -30,7 +30,10 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".Activity.SingleNewActivity"></activity>
+        <activity android:name=".Activity.SingleNewActivity" android:parentActivityName=".Activity.MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".Activity.MainActivity"/>
+        </activity>
     </application>
 
 </manifest>

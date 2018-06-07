@@ -24,8 +24,10 @@
                     android:layout_height="match_parent"
                     android:src="@drawable/ic_videogame_asset_black_24dp"
                     android:background="@android:color/holo_blue_dark"
+                    android:scaleType="fitCenter"
                     />
                 <TextView
+                    android:id="@+id/text_category_single"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/category_float_text"
@@ -52,15 +54,16 @@
                 android:textColor="@color/colorPrincipalText"
                 android:textStyle="bold"/>
             <TextView
+                android:id="@+id/text_date_single"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fecha de Noticia"
                 android:textColor="@color/colorSecondaryText"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:layout_marginLeft="8dp"
                 />
             <ScrollView
-                android:layout_marginTop="8dp"
+                android:layout_margin="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
                 <TextView
@@ -68,12 +71,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Cuerpo de noticia"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textColor="@color/colorSecondaryText"/>
             </ScrollView>
         </LinearLayout>
     </LinearLayout>
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/btn_fav_single"
         app:layout_anchor="@id/imageview_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
