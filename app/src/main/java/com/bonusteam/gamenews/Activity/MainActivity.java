@@ -144,26 +144,27 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         Fragment fragment = null;
         if(id==R.id.News_menu){
-            fragment = new MainNewsFragment();
             actionBar.setElevation(8);
             actionBar.setTitle(R.string.app_name);
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.screen_fragment, fragment);
-            ft.commit();
+            fragment = new MainNewsFragment();
+
         }
+
         if(gameList!=null) {
             for (int i = 0; i < gameList.size(); i++) {
                 if (id == ID_INFLATED_MENU + i) {
                     actionBar.setElevation(0);
                     actionBar.setTitle(gameList.get(i).getCategoryName());
                     fragment = ViewGameNewsFragment.newInstance(gameList.get(i).getCategoryName());
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.screen_fragment, fragment);
-                    ft.commit();
+
                 }
             }
         }
-
+        if(fragment!=null){
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.screen_fragment, fragment);
+            ft.commit();
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

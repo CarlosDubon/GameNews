@@ -14,7 +14,6 @@ public class New {
     @NonNull
     @ColumnInfo(name = "id")
     private String _id;
-    @SerializedName("title")
     @ColumnInfo(name = "title")
     private String title = "--*--";
     @NonNull
