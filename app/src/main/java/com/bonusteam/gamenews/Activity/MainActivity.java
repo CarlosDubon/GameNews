@@ -3,14 +3,12 @@ package com.bonusteam.gamenews.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -23,30 +21,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.bonusteam.gamenews.API.GameNewsAPI;
 import com.bonusteam.gamenews.Adapter.NewsAdapter;
 import com.bonusteam.gamenews.Entity.CategoryGame;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.SecurityToken;
 import com.bonusteam.gamenews.Fragment.MainNewsFragment;
-import com.bonusteam.gamenews.Fragment.ViewGameNewsFragment;
+import com.bonusteam.gamenews.Fragment.NewsContainerFragment;
 import com.bonusteam.gamenews.Model.GameNewsViewModel;
 import com.bonusteam.gamenews.R;
 
-import java.io.IOException;
 import java.util.List;
-
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observers.DisposableSingleObserver;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -155,8 +139,7 @@ public class MainActivity extends AppCompatActivity
                 if (id == ID_INFLATED_MENU + i) {
                     actionBar.setElevation(0);
                     actionBar.setTitle(gameList.get(i).getCategoryName());
-                    fragment = ViewGameNewsFragment.newInstance(gameList.get(i).getCategoryName());
-
+                    fragment = NewsContainerFragment.newInstance(gameList.get(i).getCategoryName());
                 }
             }
         }

@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragment.ViewGameNewsFragment"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <android.support.design.widget.TabLayout
-        android:id="@+id/tablayout_news"
+        android:id="@+id/tablayout_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         app:tabSelectedTextColor="@android:color/white"
+        app:tabTextColor="@android:color/white"
         app:tabIndicatorColor="@android:color/white"
-        app:tabTextColor="@android:color/white">
+        android:elevation="8dp">
 
     </android.support.design.widget.TabLayout>
     <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager_news"
+        android:id="@+id/viewpager_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
