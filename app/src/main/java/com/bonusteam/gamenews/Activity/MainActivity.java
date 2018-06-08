@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -26,6 +27,7 @@ import com.bonusteam.gamenews.Adapter.NewsAdapter;
 import com.bonusteam.gamenews.Entity.CategoryGame;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.SecurityToken;
+import com.bonusteam.gamenews.Entity.User;
 import com.bonusteam.gamenews.Fragment.MainNewsFragment;
 import com.bonusteam.gamenews.Fragment.NewsContainerFragment;
 import com.bonusteam.gamenews.Model.GameNewsViewModel;
@@ -46,13 +48,18 @@ public class MainActivity extends AppCompatActivity
     private List<CategoryGame> gameList;
     private ActionBar actionBar;
     public static String TOKEN_SECURITY = "SECURITY_PREFERENCE_TOKEN";
+    private User currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        securityToken = new SecurityToken(getPreferences(Context.MODE_PRIVATE).getString(TOKEN_SECURITY,""));
+        Intent i = getIntent();
+        if(i!=null) {
+            securityToken = i.getParcelableExtra("SECURITY_TOKEN");
+            Log.d("TOKEN: ", securityToken.getTokenSecurity());
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -92,6 +99,20 @@ public class MainActivity extends AppCompatActivity
                 addMenuItemInNavMenuDrawer();
             }
         });
+        if(viewModel.getCurrentUser()!=null) {
+            viewModel.getCurrentUser().observe(this, new Observer<User>() {
+                @Override
+                public void onChanged(@Nullable User user) {
+                    if (user != null) {
+                        currentUser = user;
+                        Log.d("USUARIO ACTUAL", currentUser.toString());
+                    }
+                    }
+            });
+        }else{
+            Log.d("ViewModel", "LACA");
+        }
+
     }
 
     @Override
@@ -161,7 +182,6 @@ public class MainActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         username = headerView.findViewById(R.id.username_bar);
         created_date = headerView.findViewById(R.id.date_created_bar);
-        username.setText(securityToken.getTokenSecurity());
 
     }
 

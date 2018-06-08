@@ -27,7 +27,6 @@ public interface GameNewsAPI {
     Single<SecurityToken> getSecurityToken(@Field("user")String username,@Field("password")String password);
 
     @GET("/users/detail")
-    @FormUrlEncoded
     Single<UserResponse> getCurrentUser();
 
     /**ENDPOINTS ABOUT NEWS**/

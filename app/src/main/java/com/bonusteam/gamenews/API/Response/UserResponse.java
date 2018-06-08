@@ -19,7 +19,7 @@ public class UserResponse  {
     @SerializedName("created_date")
     private String createDate;
     @SerializedName("favoriteNews")
-    private List<String> favoritesNews=null;
+    private String[] favoritesNews;
 
     public UserResponse() {
     }
@@ -44,8 +44,8 @@ public class UserResponse  {
         this.createDate = createDate;
     }
 
-    public void setFavoriteNew(List<String> idNew) {
-        favoritesNews = idNew;
+    public void setFavoriteNew(String[] idNews) {
+        favoritesNews = idNews;
     }
 
     public String get_id() {
@@ -72,7 +72,7 @@ public class UserResponse  {
         return createDate;
     }
 
-    public List<String> getFavoritesNews() {
+    public String[] getFavoritesNews() {
         return favoritesNews;
     }
 }

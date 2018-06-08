@@ -1,6 +1,8 @@
 package com.bonusteam.gamenews.API;
 
 import com.bonusteam.gamenews.API.Response.UserResponse;
+import com.bonusteam.gamenews.Entity.User;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -15,8 +17,14 @@ public class UserRepoDeserializer implements JsonDeserializer<UserResponse> {
         UserResponse user = new UserResponse();
         JsonObject object = json.getAsJsonObject();
 
+
         user.set_id(object.get("_id").getAsString());
-        user.setUsername(object.get("user").getAsString());
+        user.setUsername("");
+        user.setPassword("");
+        user.setAvatar("");
+        user.setCreateDate("");
+        user.setFavoriteNew(new String[0]);
+        /*user.setUsername(object.get("user").getAsString());
         if(object.get("avatar").getAsString()!=null){
             user.setAvatar(object.get("avatar").getAsString());
         }else{
@@ -25,8 +33,20 @@ public class UserRepoDeserializer implements JsonDeserializer<UserResponse> {
         user.setPassword(object.get("password").getAsString());
         user.setCreateDate(object.get("created_date").getAsString());
 
-        JsonElement favListJsonElement = object.get("favoriteNews");
-        JsonObject favListJsonObject = favListJsonElement.getAsJsonObject();
+        if(object.get("favoriteNews")!=null) {
+            JsonArray jsonFavsArray = object.get("favoriteNews").getAsJsonArray();
+            String[] favorites = new String[jsonFavsArray.size()];
+            for (int i = 0; i < favorites.length; i++) {
+                if( jsonFavsArray.getAsString()!=null) {
+                    favorites[i] = jsonFavsArray.getAsString();
+                }else{
+                    favorites[i]="";
+                }
+            }
+            user.setFavoriteNew(favorites);
+        }else{
+            user.setFavoriteNew(new String[0]);
+        }*/
 
         return user;
     }

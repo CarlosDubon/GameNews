@@ -17,12 +17,18 @@ public class GameNewsViewModel extends AndroidViewModel {
     private GameNewsRepository gameNewsRepository;
     private LiveData<List<New>> newList;
     private LiveData<List<Player>> playerList;
+    private LiveData<User> currentUser;
 
     public GameNewsViewModel(@NonNull Application application) {
         super(application);
         gameNewsRepository = new GameNewsRepository(application);
         newList = gameNewsRepository.getAllNews();
         playerList = gameNewsRepository.getAllPlayer();
+    }
+
+    public LiveData<User> getCurrentUser(){
+        currentUser = gameNewsRepository.getCurrentUser();
+        return currentUser;
     }
 
     public LiveData<List<New>> getAllNews() {

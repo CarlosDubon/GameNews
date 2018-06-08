@@ -10,6 +10,8 @@ import com.bonusteam.gamenews.API.NewsRepoDeserializer;
 import com.bonusteam.gamenews.API.PlayerRepoDeserializer;
 import com.bonusteam.gamenews.API.Response.NewsResponse;
 import com.bonusteam.gamenews.API.Response.PlayersResponse;
+import com.bonusteam.gamenews.API.Response.UserResponse;
+import com.bonusteam.gamenews.API.UserRepoDeserializer;
 import com.bonusteam.gamenews.Activity.MainActivity;
 import com.bonusteam.gamenews.DB.GameNewsRoomDatabase;
 import com.bonusteam.gamenews.Entity.CategoryGame;
@@ -50,6 +52,7 @@ public class GameNewsRepository {
     private LiveData<List<New>> newList;
     private LiveData<List<Player>> playerList;
     private LiveData<List<CategoryGame>> gameList;
+    private LiveData<User> currentUser;
 
     public GameNewsRepository(Application application){
         GameNewsRoomDatabase db = GameNewsRoomDatabase.getDatabase(application);
@@ -63,6 +66,15 @@ public class GameNewsRepository {
         playerList = playerDao.getAllPlayer();
         gameList = gameDao.getAllCategories();
         createAPI();
+    }
+
+    public LiveData<User> getCurrentUser(){
+        api = getCurrentUserByRepo();
+        disposable.add(api.getCurrentUser()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeWith(getUserLogged()));
+        return currentUser;
     }
 
     public LiveData<List<CategoryGame>> getAllGames(){
@@ -315,6 +327,54 @@ public class GameNewsRepository {
             @Override
             public void onError(Throwable e) {
                 Log.d("ERROR_GAME_LIST",e.getMessage());
+            }
+        };
+    }
+
+    private GameNewsAPI getCurrentUserByRepo(){
+        Gson gson = new GsonBuilder()
+                .setDateFormat("dd/MM/yyyy")
+                .registerTypeAdapter(UserResponse.class,new UserRepoDeserializer())
+                .create();
+
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request newRequest = chain.request().newBuilder()
+                                .addHeader("Authorization","Bearer "+ MainActivity.securityToken.getTokenSecurity())
+                                .build();
+                        return chain.proceed(newRequest);
+                    }
+
+                }).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(GameNewsAPI.ENDPOINT)
+                .client(client)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        api = retrofit.create(GameNewsAPI.class);
+        return api;
+    }
+
+    private DisposableSingleObserver<UserResponse> getUserLogged(){
+        return new DisposableSingleObserver<UserResponse>() {
+            @Override
+            public void onSuccess(UserResponse value) {
+                User user = new User();
+                user.set_id(value.get_id());
+                user.setAvatar(value.getAvatar());
+                user.setPassword(value.getPassword());
+                user.setCreateDate(value.getCreateDate());
+                user.setFavoriteNew(value.getFavoritesNews());
+                insertUser(user);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("ERROR_GET_USER",e.getMessage());
             }
         };
     }

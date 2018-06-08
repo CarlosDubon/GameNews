@@ -6,6 +6,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Entity(tableName = "user_table")
@@ -14,19 +15,19 @@ public class User {
     @NonNull
     @ColumnInfo(name = "id")
     private String _id;
-    @NonNull
     @ColumnInfo(name = "username")
     private String username;
-    @NonNull
     @ColumnInfo(name = "avatar")
     private String avatar ="http://noAvatar.jpg";
-    @NonNull
     @ColumnInfo(name = "password")
     private String password;
-    @NonNull
     @ColumnInfo(name = "create_date")
     private String createDate;
-    private List<String> favoritesNews;
+    @Ignore
+    private String[] favoritesNews;
+    @Ignore
+    public User() {
+    }
 
     public User(String _id, @NonNull String username, @NonNull String avatar, @NonNull String password, @NonNull String createDate) {
         this._id = _id;
@@ -56,8 +57,8 @@ public class User {
         this.createDate = createDate;
     }
 
-    public void setFavoriteNew(List<String> idNew) {
-        favoritesNews = idNew;
+    public void setFavoriteNew(String[] idNews) {
+        favoritesNews = idNews;
     }
 
     public String get_id() {
@@ -84,7 +85,19 @@ public class User {
         return createDate;
     }
 
-    public List<String> getFavoritesNews() {
+    public String[] getFavoritesNews() {
         return favoritesNews;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "_id='" + _id + '\'' +
+                ", username='" + username + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", password='" + password + '\'' +
+                ", createDate='" + createDate + '\'' +
+                ", favoritesNews=" + Arrays.toString(favoritesNews) +
+                '}';
     }
 }
