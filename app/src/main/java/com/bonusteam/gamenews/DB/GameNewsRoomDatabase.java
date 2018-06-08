@@ -1,10 +1,12 @@
 package com.bonusteam.gamenews.DB;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
-
+import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 
 import com.bonusteam.gamenews.Entity.CategoryGame;
 import com.bonusteam.gamenews.Entity.New;
@@ -32,10 +34,33 @@ public abstract class GameNewsRoomDatabase extends RoomDatabase {
             synchronized (GameNewsRoomDatabase.class){
                 if(INSTANCE==null){
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),GameNewsRoomDatabase.class,"game_news_db")
+                            .addCallback(roomDatabaseCallback)
                             .build();
                 }
             }
         }
         return INSTANCE;
+    }
+
+    private static RoomDatabase.Callback roomDatabaseCallback = new RoomDatabase.Callback(){
+        @Override
+        public void onOpen(@NonNull SupportSQLiteDatabase db){
+            super.onOpen(db);
+
+        }
+    };
+
+    private static class CleanUserCache extends AsyncTask<User,Void,Void>{
+
+        private UserDao userDao;
+        public CleanUserCache(GameNewsRoomDatabase db){
+            userDao = db.userDao();
+        }
+
+        @Override
+        protected Void doInBackground(User... users) {
+            userDao.deleteAllUser();
+            return null;
+        }
     }
 }

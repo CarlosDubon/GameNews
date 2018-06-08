@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bonusteam.gamenews.Adapter.NewsAdapter;
@@ -33,6 +34,7 @@ import com.bonusteam.gamenews.Fragment.MainNewsFragment;
 import com.bonusteam.gamenews.Fragment.NewsContainerFragment;
 import com.bonusteam.gamenews.Model.GameNewsViewModel;
 import com.bonusteam.gamenews.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity
     private final static int ID_INFLATED_MENU = 101010101;
     private NewsAdapter newsAdapter;
     private GameNewsViewModel viewModel;
+    private ImageView avatar;
     private TextView username,created_date;
     private List<CategoryGame> gameList;
     private ActionBar actionBar;
@@ -185,8 +188,11 @@ public class MainActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         username = headerView.findViewById(R.id.username_bar);
         created_date = headerView.findViewById(R.id.date_created_bar);
+        avatar = headerView.findViewById(R.id.avatar_user_bar);
+
         username.setText(user.getUsername());
         created_date.setText(user.get_id());
+        Picasso.get().load(user.getAvatar()).into(avatar);
 
     }
 
