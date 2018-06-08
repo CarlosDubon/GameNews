@@ -13,6 +13,8 @@ import java.util.List;
 
 @Dao
 public interface UserDao {
+    @Query("SELECT * FROM user_table")
+    LiveData<User> getCurrentUser();
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertUser(User user);
     @Update

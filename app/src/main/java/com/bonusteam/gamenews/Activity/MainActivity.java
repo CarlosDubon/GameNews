@@ -1,5 +1,6 @@
 package com.bonusteam.gamenews.Activity;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -70,8 +71,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        initControls();
-
         executeLists();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -99,19 +98,23 @@ public class MainActivity extends AppCompatActivity
                 addMenuItemInNavMenuDrawer();
             }
         });
-        if(viewModel.getCurrentUser()!=null) {
-            viewModel.getCurrentUser().observe(this, new Observer<User>() {
+        LiveData<User> liveData = viewModel.getCurrentUser();
+        if(liveData!=null) {
+            liveData.observe(this, new Observer<User>() {
                 @Override
                 public void onChanged(@Nullable User user) {
                     if (user != null) {
                         currentUser = user;
-                        Log.d("USUARIO ACTUAL", currentUser.toString());
+                        Log.d("CURRENT_USERS",currentUser.toString());
+                        initControls(currentUser);
+
                     }
-                    }
+                }
             });
         }else{
-            Log.d("ViewModel", "LACA");
+            Log.d("VIEWMODEL", "NULL");
         }
+
 
     }
 
@@ -176,12 +179,14 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public void initControls(){
+    public void initControls(User user){
         actionBar = getSupportActionBar();
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         username = headerView.findViewById(R.id.username_bar);
         created_date = headerView.findViewById(R.id.date_created_bar);
+        username.setText(user.getUsername());
+        created_date.setText(user.get_id());
 
     }
 

@@ -65,6 +65,7 @@ public class GameNewsRepository {
         newList = newDao.getAllNews();
         playerList = playerDao.getAllPlayer();
         gameList = gameDao.getAllCategories();
+        currentUser = userDao.getCurrentUser();
         createAPI();
     }
 
@@ -365,6 +366,7 @@ public class GameNewsRepository {
             public void onSuccess(UserResponse value) {
                 User user = new User();
                 user.set_id(value.get_id());
+                user.setUsername(value.getUsername());
                 user.setAvatar(value.getAvatar());
                 user.setPassword(value.getPassword());
                 user.setCreateDate(value.getCreateDate());
