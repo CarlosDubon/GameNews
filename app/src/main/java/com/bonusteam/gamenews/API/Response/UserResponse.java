@@ -1,39 +1,27 @@
-package com.bonusteam.gamenews.Entity;
+package com.bonusteam.gamenews.API.Response;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-@Entity(tableName = "user_table")
-public class User {
-    @PrimaryKey
-    @NonNull
-    @ColumnInfo(name = "id")
+public class UserResponse  {
+    @SerializedName("_id")
     private String _id;
-    @NonNull
-    @ColumnInfo(name = "username")
+    @SerializedName("user")
     private String username;
-    @NonNull
-    @ColumnInfo(name = "avatar")
-    private String avatar ="http://noAvatar.jpg";
-    @NonNull
-    @ColumnInfo(name = "password")
+    @SerializedName("avatar")
+    private String avatar;
+    @SerializedName("password")
     private String password;
-    @NonNull
-    @ColumnInfo(name = "create_date")
+    @SerializedName("created_date")
     private String createDate;
-    private List<String> favoritesNews;
+    @SerializedName("favoriteNews")
+    private List<String> favoritesNews=null;
 
-    public User(String _id, @NonNull String username, @NonNull String avatar, @NonNull String password, @NonNull String createDate) {
-        this._id = _id;
-        this.username = username;
-        this.avatar = avatar;
-        this.password = password;
-        this.createDate = createDate;
+    public UserResponse() {
     }
 
     public void set_id(String _id) {

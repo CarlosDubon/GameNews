@@ -2,8 +2,10 @@ package com.bonusteam.gamenews.API;
 
 import com.bonusteam.gamenews.API.Response.NewsResponse;
 import com.bonusteam.gamenews.API.Response.PlayersResponse;
+import com.bonusteam.gamenews.API.Response.UserResponse;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.SecurityToken;
+import com.bonusteam.gamenews.Entity.User;
 
 import java.util.List;
 
@@ -24,6 +26,10 @@ public interface GameNewsAPI {
     @FormUrlEncoded
     Single<SecurityToken> getSecurityToken(@Field("user")String username,@Field("password")String password);
 
+    @GET("/users/detail")
+    @FormUrlEncoded
+    Single<UserResponse> getCurrentUser();
+
     /**ENDPOINTS ABOUT NEWS**/
     @GET("/news")
     Single<List<NewsResponse>> getNewsByRepo();
@@ -34,6 +40,7 @@ public interface GameNewsAPI {
     /**ENDS POINTS ABOUT PLAYERS**/
     @GET("/players")
     Single<List<PlayersResponse>> getAllPlayers();
+
 
 
 
