@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="32dp"
+
+    android:layout_gravity="center_vertical"
+    android:background="@color/colorAccent">
+    
+    <LinearLayout
+        android:layout_marginTop="70dp"
+        android:layout_width="match_parent"
+        android:layout_height="275dp"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
+        <TextView
+            android:layout_weight="0.2"
+            android:id="@+id/text_name_player_dialog"
+            android:layout_marginTop="65dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="@string/text_nombre_de_jugador"
+            android:gravity="center_horizontal"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_weight="0.8"
+            android:id="@+id/text_bio_player_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:text="@string/text_biografia"
+            android:layout_marginRight="24dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginBottom="16dp"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatar_player_dialog"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/avatar_generic"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/circle_white"/>
+</RelativeLayout>
