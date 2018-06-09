@@ -19,8 +19,7 @@ public class UserResponse  {
     private String password;
     @SerializedName("created_date")
     private String createDate;
-    @SerializedName("favoriteNews")
-    private New[] favoritesNews;
+
 
     public UserResponse() {
     }
@@ -45,9 +44,6 @@ public class UserResponse  {
         this.createDate = createDate;
     }
 
-    public void setFavoriteNew(New[] idNews) {
-        favoritesNews = idNews;
-    }
 
     public String get_id() {
         return _id;
@@ -73,7 +69,4 @@ public class UserResponse  {
         return createDate;
     }
 
-    public New[] getFavoritesNews() {
-        return favoritesNews;
-    }
 }

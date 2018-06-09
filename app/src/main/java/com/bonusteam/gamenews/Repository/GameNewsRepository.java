@@ -52,7 +52,6 @@ public class GameNewsRepository {
     private LiveData<List<Player>> playerList;
     private LiveData<List<CategoryGame>> gameList;
     private LiveData<User> currentUser;
-    private New[] favoritesList;
 
     public GameNewsRepository(Application application){
         GameNewsRoomDatabase db = GameNewsRoomDatabase.getDatabase(application);
@@ -67,10 +66,6 @@ public class GameNewsRepository {
         gameList = gameDao.getAllCategories();
         currentUser = userDao.getCurrentUser();
         createAPI();
-    }
-
-    public New[] getFavList(){
-        return favoritesList;
     }
 
     public LiveData<User> getCurrentUser(){
@@ -375,8 +370,6 @@ public class GameNewsRepository {
                 user.setAvatar(value.getAvatar());
                 user.setPassword(value.getPassword());
                 user.setCreateDate(value.getCreateDate());
-                user.setFavoriteNew(value.getFavoritesNews());
-                favoritesList = value.getFavoritesNews();
                 insertUser(user);
             }
 

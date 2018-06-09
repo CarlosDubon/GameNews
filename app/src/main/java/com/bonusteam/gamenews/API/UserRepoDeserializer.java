@@ -35,12 +35,6 @@ public class UserRepoDeserializer implements JsonDeserializer<UserResponse> {
         if(object.get("created_date")!=null) {
             user.setCreateDate(object.get("created_date").getAsString());
         }
-        if(object.get("favoriteNews")!=null) {
-            New[] fabNotices = context.deserialize(object.get("favoriteNews"),New[].class);
-            user.setFavoriteNew(fabNotices);
-        }else{
-            user.setFavoriteNew(new New[0]);
-        }
 
         return user;
     }

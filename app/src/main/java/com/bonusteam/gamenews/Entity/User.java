@@ -23,8 +23,7 @@ public class User {
     private String password;
     @ColumnInfo(name = "create_date")
     private String createDate;
-    @Ignore
-    private New[] favoritesNews;
+
     @Ignore
     public User() {
     }
@@ -57,9 +56,6 @@ public class User {
         this.createDate = createDate;
     }
 
-    public void setFavoriteNew(New[] idNews) {
-        favoritesNews = idNews;
-    }
 
     public String get_id() {
         return _id;
@@ -85,9 +81,6 @@ public class User {
         return createDate;
     }
 
-    public New[] getFavoritesNews() {
-        return favoritesNews;
-    }
 
     @Override
     public String toString() {
@@ -97,7 +90,6 @@ public class User {
                 ", avatar='" + avatar + '\'' +
                 ", password='" + password + '\'' +
                 ", createDate='" + createDate + '\'' +
-                ", favoritesNews=" + Arrays.toString(favoritesNews) +
                 '}';
     }
 }

@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity
                 public void onChanged(@Nullable User user) {
                 if (user != null) {
                     currentUser = user;
-                    currentUser.setFavoriteNew(viewModel.getFavorites());
+                    Log.d("USUARIO ACTUAL", currentUser.toString());
                     initControls(currentUser);
 
                 }
@@ -163,10 +163,7 @@ public class MainActivity extends AppCompatActivity
 
         }
         if(id == R.id.favorites){
-            NewsAdapter adapter = new NewsAdapter(this);
-            List<New> favoritesList = new ArrayList<>(Arrays.asList(currentUser.getFavoritesNews()));
-            adapter.fillNews(favoritesList);
-            fragment = NewsByGameFragment.newInstance(adapter);
+
         }
 
         int i = 0;
@@ -200,7 +197,7 @@ public class MainActivity extends AppCompatActivity
         avatar = headerView.findViewById(R.id.avatar_user_bar);
 
         username.setText(user.getUsername());
-        created_date.setText(user.get_id());
+        created_date.setText(user.getCreateDate());
         Picasso.get().load(user.getAvatar()).into(avatar);
 
     }
