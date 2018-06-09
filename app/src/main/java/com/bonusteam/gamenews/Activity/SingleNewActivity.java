@@ -49,10 +49,10 @@ public class SingleNewActivity extends AppCompatActivity {
             public void onChanged(@Nullable New aNew) {
                 notice = aNew;
                 if(notice!=null){
-                    Picasso.get().load(notice.getConverImage()).error(R.drawable.ic_videogame_asset_black_24dp).into(imageView);
+                    Picasso.get().load(notice.getCoverImage()).error(R.drawable.ic_videogame_asset_black_24dp).into(imageView);
                     title.setText(notice.getTitle());
                     game.setText(notice.getGame());
-                    date.setText(notice.getCreateDate());
+                    date.setText(notice.getCreated_date());
                     body.setText(notice.getBody());
                 }
             }

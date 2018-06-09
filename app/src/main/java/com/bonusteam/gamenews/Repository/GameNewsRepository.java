@@ -28,7 +28,6 @@ import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.util.List;
 
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableSingleObserver;
@@ -231,9 +230,9 @@ public class GameNewsRepository {
                         newNotice.set_id(notice.get_id());
                         newNotice.setTitle(notice.getTitle());
                         newNotice.setDescription(notice.getDescription());
-                        newNotice.setConverImage(notice.getCoverImage());
+                        newNotice.setCoverImage(notice.getCoverImage());
                         newNotice.setBody(notice.getBody());
-                        newNotice.setCreateDate(notice.getCreated_date());
+                        newNotice.setCreated_date(notice.getCreated_date());
                         newNotice.setGame(notice.getGame());
                         insertNews(newNotice);
                     }

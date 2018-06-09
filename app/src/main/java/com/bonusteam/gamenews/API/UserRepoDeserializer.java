@@ -1,5 +1,6 @@
 package com.bonusteam.gamenews.API;
 
+import com.bonusteam.gamenews.API.Response.NewsResponse;
 import com.bonusteam.gamenews.API.Response.UserResponse;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.User;

@@ -6,8 +6,6 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-import com.google.gson.annotations.SerializedName;
-
 @Entity(tableName = "news_table")
 public class New {
     @PrimaryKey
@@ -18,9 +16,9 @@ public class New {
     private String title = "--*--";
     @NonNull
     @ColumnInfo(name = "cover_image")
-    private String converImage;
+    private String coverImage;
     @ColumnInfo(name = "create_date")
-    private String createDate="-----";
+    private String created_date ="-----";
     @ColumnInfo(name = "description")
     private String description="--*--";
     @ColumnInfo(name = "body")
@@ -32,11 +30,11 @@ public class New {
     @Ignore
     public New(){}
 
-    public New(@NonNull String _id, String title, @NonNull String converImage, String createDate, String description, String body, @NonNull String game) {
+    public New(@NonNull String _id, String title, @NonNull String coverImage, String created_date, String description, String body, @NonNull String game) {
         this._id = _id;
         this.title = title;
-        this.converImage = converImage;
-        this.createDate = createDate;
+        this.coverImage = coverImage;
+        this.created_date = created_date;
         this.description = description;
         this.body = body;
         this.game = game;
@@ -50,12 +48,12 @@ public class New {
         this.title = title;
     }
 
-    public void setConverImage(@NonNull String converImage) {
-        this.converImage = converImage;
+    public void setCoverImage(@NonNull String coverImage) {
+        this.coverImage = coverImage;
     }
 
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
+    public void setCreated_date(String created_date) {
+        this.created_date = created_date;
     }
 
     public void setDescription(String description) {
@@ -78,12 +76,12 @@ public class New {
         return title;
     }
 
-    public String getConverImage() {
-        return converImage;
+    public String getCoverImage() {
+        return coverImage;
     }
 
-    public String getCreateDate() {
-        return createDate;
+    public String getCreated_date() {
+        return created_date;
     }
 
     public String getDescription() {
@@ -103,8 +101,8 @@ public class New {
         return "New{" +
                 "_id='" + _id + '\'' +
                 ", title='" + title + '\'' +
-                ", converImage='" + converImage + '\'' +
-                ", createDate='" + createDate + '\'' +
+                ", coverImage='" + coverImage + '\'' +
+                ", created_date='" + created_date + '\'' +
                 ", description='" + description + '\'' +
                 ", body='" + body + '\'' +
                 ", game='" + game + '\'' +

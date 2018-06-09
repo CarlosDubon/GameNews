@@ -31,11 +31,14 @@ import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.SecurityToken;
 import com.bonusteam.gamenews.Entity.User;
 import com.bonusteam.gamenews.Fragment.MainNewsFragment;
+import com.bonusteam.gamenews.Fragment.NewsByGameFragment;
 import com.bonusteam.gamenews.Fragment.NewsContainerFragment;
 import com.bonusteam.gamenews.Model.GameNewsViewModel;
 import com.bonusteam.gamenews.R;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -106,11 +109,12 @@ public class MainActivity extends AppCompatActivity
             liveData.observe(this, new Observer<User>() {
                 @Override
                 public void onChanged(@Nullable User user) {
-                    if (user != null) {
-                        currentUser = user;
-                        initControls(currentUser);
+                if (user != null) {
+                    currentUser = user;
+                    currentUser.setFavoriteNew(viewModel.getFavorites());
+                    initControls(currentUser);
 
-                    }
+                }
                 }
             });
         }else{
@@ -157,6 +161,12 @@ public class MainActivity extends AppCompatActivity
             actionBar.setTitle(R.string.app_name);
             fragment = new MainNewsFragment();
 
+        }
+        if(id == R.id.favorites){
+            NewsAdapter adapter = new NewsAdapter(this);
+            List<New> favoritesList = new ArrayList<>(Arrays.asList(currentUser.getFavoritesNews()));
+            adapter.fillNews(favoritesList);
+            fragment = NewsByGameFragment.newInstance(adapter);
         }
 
         int i = 0;
