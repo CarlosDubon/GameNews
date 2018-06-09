@@ -3,6 +3,7 @@ package com.bonusteam.gamenews.API.Response;
 import android.arch.persistence.room.Ignore;
 import android.support.annotation.NonNull;
 
+import com.bonusteam.gamenews.Entity.New;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class UserResponse  {
     @SerializedName("created_date")
     private String createDate;
     @SerializedName("favoriteNews")
-    private String[] favoritesNews;
+    private New[] favoritesNews;
 
     public UserResponse() {
     }
@@ -44,7 +45,7 @@ public class UserResponse  {
         this.createDate = createDate;
     }
 
-    public void setFavoriteNew(String[] idNews) {
+    public void setFavoriteNew(New[] idNews) {
         favoritesNews = idNews;
     }
 
@@ -72,7 +73,7 @@ public class UserResponse  {
         return createDate;
     }
 
-    public String[] getFavoritesNews() {
+    public New[] getFavoritesNews() {
         return favoritesNews;
     }
 }

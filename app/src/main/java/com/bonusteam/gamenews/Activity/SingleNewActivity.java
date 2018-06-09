@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ public class SingleNewActivity extends AppCompatActivity {
         Intent responseIntent = getIntent();
         if(responseIntent!=null){
             idNew = responseIntent.getStringExtra("ID_NEW");
+            Log.d("ID_NEW",idNew);
         }
         imageView = findViewById(R.id.imageview_new_single);
         title = findViewById(R.id.text_titulo_single);

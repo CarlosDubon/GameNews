@@ -26,6 +26,10 @@ public class GameNewsViewModel extends AndroidViewModel {
         playerList = gameNewsRepository.getAllPlayer();
     }
 
+    public New[] getFavorites(){
+        return gameNewsRepository.getFavList();
+    }
+
     public LiveData<User> getCurrentUser(){
         currentUser = gameNewsRepository.getCurrentUser();
         return currentUser;

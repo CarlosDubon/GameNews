@@ -1,6 +1,7 @@
 package com.bonusteam.gamenews.API;
 
 import com.bonusteam.gamenews.API.Response.UserResponse;
+import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.User;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -34,18 +35,10 @@ public class UserRepoDeserializer implements JsonDeserializer<UserResponse> {
             user.setCreateDate(object.get("created_date").getAsString());
         }
         if(object.get("favoriteNews")!=null) {
-            JsonArray jsonFavsArray = object.get("favoriteNews").getAsJsonArray();
-            String[] favorites = new String[jsonFavsArray.size()];
-            for (int i = 0; i < favorites.length; i++) {
-                if( jsonFavsArray.getAsString()!=null) {
-                    favorites[i] = jsonFavsArray.getAsString();
-                }else{
-                    favorites[i]="";
-                }
-            }
-            user.setFavoriteNew(favorites);
+            New[] fabNotices = context.deserialize(object.get("favoriteNews"),New[].class);
+            user.setFavoriteNew(fabNotices);
         }else{
-            user.setFavoriteNew(new String[0]);
+            user.setFavoriteNew(new New[0]);
         }
 
         return user;

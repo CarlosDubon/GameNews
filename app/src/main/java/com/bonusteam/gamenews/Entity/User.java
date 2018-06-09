@@ -24,7 +24,7 @@ public class User {
     @ColumnInfo(name = "create_date")
     private String createDate;
     @Ignore
-    private String[] favoritesNews;
+    private New[] favoritesNews;
     @Ignore
     public User() {
     }
@@ -57,7 +57,7 @@ public class User {
         this.createDate = createDate;
     }
 
-    public void setFavoriteNew(String[] idNews) {
+    public void setFavoriteNew(New[] idNews) {
         favoritesNews = idNews;
     }
 
@@ -85,7 +85,7 @@ public class User {
         return createDate;
     }
 
-    public String[] getFavoritesNews() {
+    public New[] getFavoritesNews() {
         return favoritesNews;
     }
 

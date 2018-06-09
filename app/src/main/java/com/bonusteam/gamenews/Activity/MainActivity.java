@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity
                 public void onChanged(@Nullable User user) {
                     if (user != null) {
                         currentUser = user;
-                        Log.d("CURRENT_USERS",currentUser.toString());
                         initControls(currentUser);
 
                     }
