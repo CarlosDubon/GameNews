@@ -27,6 +27,13 @@ public class GameNewsViewModel extends AndroidViewModel {
         playerList = gameNewsRepository.getAllPlayer();
     }
 
+    public void addFavoriteNew(String idUser,String idNew){
+        gameNewsRepository.addFavoriteNew(idUser,idNew);
+    }
+    public void addToFavList(Favorite favorite){
+        gameNewsRepository.exectInserFavorite(favorite);
+    }
+
     public LiveData<List<Favorite>> getFavorieList(){
         return gameNewsRepository.getAllFavorites();
     }

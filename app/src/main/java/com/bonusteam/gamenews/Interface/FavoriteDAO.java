@@ -19,4 +19,6 @@ public interface FavoriteDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertFavorite(Favorite favorite);
 
+    @Query("DELETE FROM favorites_table")
+    void deleteAll();
 }

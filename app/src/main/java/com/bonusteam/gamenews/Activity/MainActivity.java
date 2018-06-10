@@ -35,6 +35,7 @@ import com.bonusteam.gamenews.Fragment.FavoriteNewFragment;
 import com.bonusteam.gamenews.Fragment.MainNewsFragment;
 import com.bonusteam.gamenews.Fragment.NewsByGameFragment;
 import com.bonusteam.gamenews.Fragment.NewsContainerFragment;
+import com.bonusteam.gamenews.Interface.NewTools;
 import com.bonusteam.gamenews.Model.GameNewsViewModel;
 import com.bonusteam.gamenews.R;
 import com.squareup.picasso.Picasso;
@@ -45,7 +46,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        MainNewsFragment.MainSetters{
+        MainNewsFragment.MainSetters ,
+        NewTools{
 
 
     public static SecurityToken securityToken;
@@ -225,5 +227,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void setAdapters(RecyclerView rv) {
         rv.setAdapter(newsAdapter);
+    }
+
+    @Override
+    public void addFavorites(String idNew) {
+        viewModel.addToFavList(new Favorite(idNew));
+        viewModel.addFavoriteNew(currentUser.get_id(),idNew);
     }
 }

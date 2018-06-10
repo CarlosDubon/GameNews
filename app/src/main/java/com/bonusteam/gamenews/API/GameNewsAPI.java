@@ -15,6 +15,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface GameNewsAPI {
     String ENDPOINT = "http://gamenewsuca.herokuapp.com";
@@ -26,6 +27,10 @@ public interface GameNewsAPI {
     @POST("/login")
     @FormUrlEncoded
     Single<SecurityToken> getSecurityToken(@Field("user")String username,@Field("password")String password);
+
+    @POST("/users/{idUser}/fav")
+    @FormUrlEncoded
+    Single<Void> addFavorite(@Path("idUser")String idUser,@Field("new")String idNew);
 
     @GET("/users/detail")
     Single<UserResponse> getCurrentUser();

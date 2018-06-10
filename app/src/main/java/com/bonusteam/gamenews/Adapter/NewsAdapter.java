@@ -11,14 +11,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bonusteam.gamenews.Activity.MainActivity;
 import com.bonusteam.gamenews.Activity.SingleNewActivity;
 import com.bonusteam.gamenews.Entity.New;
+import com.bonusteam.gamenews.Interface.NewTools;
 import com.bonusteam.gamenews.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder> {
+    private NewTools tools;
     private final LayoutInflater layoutInflater;
     private List<New> newList;
     private Context context;
@@ -38,6 +41,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     }
     public NewsAdapter(Context context){
         layoutInflater = LayoutInflater.from(context);
+        tools = (MainActivity) context;
         this.context = context;
     }
 
@@ -64,6 +68,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
                 Intent i = new Intent(context.getApplicationContext(), SingleNewActivity.class);
                 i.putExtra("ID_NEW",newList.get(position).get_id());
                 context.startActivity(i);
+            }
+        });
+        holder.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tools.addFavorites(newList.get(position).get_id());
             }
         });
     }

@@ -135,6 +135,17 @@ public class GameNewsRepository {
         return newList;
     }
 
+    public void addFavoriteNew(String idUser,String idNew){
+        api = createAddFavRequest();
+        disposable.add(api.addFavorite(idUser,idNew)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(addFavObserver()));
+    }
+    public void exectInserFavorite(Favorite fab){
+        insertFavorite(fab);
+    }
+
 
     /**
      *METODOS QUE EJECTUTAN LOS THREADS
@@ -453,6 +464,40 @@ public class GameNewsRepository {
                 for(String value:values.get_id()){
                     insertFavorite(new Favorite(value));
                 }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        };
+    }
+
+    private GameNewsAPI createAddFavRequest(){
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request request = chain.request().newBuilder()
+                                .addHeader("Authorization","Bearer "+ MainActivity.securityToken.getTokenSecurity())
+                                .build();
+                        return chain.proceed(request);
+                    }
+                }).build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(GameNewsAPI.ENDPOINT)
+                .client(client)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        return retrofit.create(GameNewsAPI.class);
+    }
+    private DisposableSingleObserver<Void> addFavObserver(){
+        return new DisposableSingleObserver<Void>() {
+            @Override
+            public void onSuccess(Void value) {
+
             }
 
             @Override
