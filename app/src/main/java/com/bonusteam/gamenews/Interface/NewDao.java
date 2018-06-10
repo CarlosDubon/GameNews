@@ -17,8 +17,10 @@ public interface NewDao {
 
     @Query("SELECT * FROM news_table WHERE game = :game ORDER BY create_date DESC")
     LiveData<List<New>> getNewsByCategory(String game);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertNew(New news);
+
     @Query("SELECT * FROM news_table WHERE id = :id")
     LiveData<New> getNew(String id);
 

@@ -9,22 +9,25 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
 import com.bonusteam.gamenews.Entity.CategoryGame;
+import com.bonusteam.gamenews.Entity.Favorite;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.Player;
 import com.bonusteam.gamenews.Entity.User;
 import com.bonusteam.gamenews.Interface.CategoryGameDao;
+import com.bonusteam.gamenews.Interface.FavoriteDAO;
 import com.bonusteam.gamenews.Interface.NewDao;
 import com.bonusteam.gamenews.Interface.PlayerDao;
 import com.bonusteam.gamenews.Interface.UserDao;
 
 
 
-@Database(entities = {New.class, User.class, Player.class, CategoryGame.class},version = 1)
+@Database(entities = {New.class, User.class, Player.class, CategoryGame.class, Favorite.class},version = 1)
 public abstract class GameNewsRoomDatabase extends RoomDatabase {
     public abstract UserDao userDao();
     public abstract NewDao newDao();
     public abstract PlayerDao playerDao();
     public abstract CategoryGameDao categoryGameDao();
+    public abstract FavoriteDAO favoriteDAO();
 
 
     private static GameNewsRoomDatabase INSTANCE;
@@ -46,7 +49,7 @@ public abstract class GameNewsRoomDatabase extends RoomDatabase {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db){
             super.onOpen(db);
-
+            new CleanUserCache(INSTANCE).execute();
         }
     };
 

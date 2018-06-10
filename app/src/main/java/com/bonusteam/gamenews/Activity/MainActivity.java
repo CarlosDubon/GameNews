@@ -27,9 +27,11 @@ import android.widget.TextView;
 
 import com.bonusteam.gamenews.Adapter.NewsAdapter;
 import com.bonusteam.gamenews.Entity.CategoryGame;
+import com.bonusteam.gamenews.Entity.Favorite;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.SecurityToken;
 import com.bonusteam.gamenews.Entity.User;
+import com.bonusteam.gamenews.Fragment.FavoriteNewFragment;
 import com.bonusteam.gamenews.Fragment.MainNewsFragment;
 import com.bonusteam.gamenews.Fragment.NewsByGameFragment;
 import com.bonusteam.gamenews.Fragment.NewsContainerFragment;
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     private ActionBar actionBar;
     public static String TOKEN_SECURITY = "SECURITY_PREFERENCE_TOKEN";
     private User currentUser;
+    private List<Favorite> idNewList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,9 +91,11 @@ public class MainActivity extends AppCompatActivity
     private void executeLists() {
         newsAdapter = new NewsAdapter(this);
         viewModel = ViewModelProviders.of(this).get(GameNewsViewModel.class);
+
         viewModel.getAllNews().observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> newList) {
+
                 newsAdapter.fillNews(newList);
             }
         });
@@ -104,23 +109,23 @@ public class MainActivity extends AppCompatActivity
                 addMenuItemInNavMenuDrawer();
             }
         });
-        LiveData<User> liveData = viewModel.getCurrentUser();
-        if(liveData!=null) {
-            liveData.observe(this, new Observer<User>() {
-                @Override
-                public void onChanged(@Nullable User user) {
+        viewModel.getCurrentUser().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(@Nullable User user) {
                 if (user != null) {
                     currentUser = user;
                     Log.d("USUARIO ACTUAL", currentUser.toString());
                     initControls(currentUser);
 
                 }
-                }
-            });
-        }else{
-            Log.d("VIEWMODEL", "NULL");
-        }
-
+            }
+        });
+        viewModel.getFavorieList().observe(this, new Observer<List<Favorite>>() {
+            @Override
+            public void onChanged(@Nullable List<Favorite> favorites) {
+                idNewList = favorites;
+            }
+        });
 
     }
 
@@ -163,7 +168,7 @@ public class MainActivity extends AppCompatActivity
 
         }
         if(id == R.id.favorites){
-
+            fragment = FavoriteNewFragment.newInstance(idNewList);
         }
 
         int i = 0;

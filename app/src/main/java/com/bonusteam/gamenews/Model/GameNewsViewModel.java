@@ -6,6 +6,7 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 
 import com.bonusteam.gamenews.Entity.CategoryGame;
+import com.bonusteam.gamenews.Entity.Favorite;
 import com.bonusteam.gamenews.Entity.New;
 import com.bonusteam.gamenews.Entity.Player;
 import com.bonusteam.gamenews.Entity.User;
@@ -26,7 +27,9 @@ public class GameNewsViewModel extends AndroidViewModel {
         playerList = gameNewsRepository.getAllPlayer();
     }
 
-
+    public LiveData<List<Favorite>> getFavorieList(){
+        return gameNewsRepository.getAllFavorites();
+    }
     public LiveData<User> getCurrentUser(){
         currentUser = gameNewsRepository.getCurrentUser();
         return currentUser;

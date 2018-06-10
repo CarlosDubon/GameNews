@@ -1,5 +1,6 @@
 package com.bonusteam.gamenews.API;
 
+import com.bonusteam.gamenews.API.Response.FavoriteResponse;
 import com.bonusteam.gamenews.API.Response.NewsResponse;
 import com.bonusteam.gamenews.API.Response.PlayersResponse;
 import com.bonusteam.gamenews.API.Response.UserResponse;
@@ -28,6 +29,9 @@ public interface GameNewsAPI {
 
     @GET("/users/detail")
     Single<UserResponse> getCurrentUser();
+
+    @GET("/users/detail")
+    Single<FavoriteResponse> getFavoritesListUser();
 
     /**ENDPOINTS ABOUT NEWS**/
     @GET("/news")
