@@ -37,10 +37,9 @@
                 android:id="@+id/text_fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_favorite_grey"
-                android:drawableTint="@android:color/white"
                 android:textSize="16sp"
-                android:padding="8dp"/>
+                android:layout_margin="16dp"/>
+
             <TextView
                 android:id="@+id/text_date_news"
                 android:layout_width="wrap_content"

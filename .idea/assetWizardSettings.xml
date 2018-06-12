@@ -28,8 +28,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_favorite_white" />
+                            <entry key="color" value="a71421" />
+                            <entry key="outputName" value="ic_favorite_active" />
                             <entry key="overrideSize" value="true" />
                             <entry key="sourceFile" value="C:\Users\Carlos\Downloads\user.svg" />
                           </map>

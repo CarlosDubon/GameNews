@@ -27,8 +27,25 @@ public class GameNewsViewModel extends AndroidViewModel {
         playerList = gameNewsRepository.getAllPlayer();
     }
 
+    public void refreshNews(){
+        gameNewsRepository.refreshNews();
+    }
+    public void refreshNewsListID(){
+        gameNewsRepository.refresFavoritesListID();
+    }
+
+    public LiveData<List<New>> getFavoriteObjectNews(){
+        return gameNewsRepository.getFavoritesObjectNews();
+    }
+    public void updateNewFaState(String value,String idNew){
+        gameNewsRepository.updateFavNewState(value,idNew);
+    }
+
     public void addFavoriteNew(String idUser,String idNew){
         gameNewsRepository.addFavoriteNew(idUser,idNew);
+    }
+    public void removeFavoriteNew(String idUser,String idNew){
+        gameNewsRepository.removeFavoriteNew(idUser,idNew);
     }
     public void addToFavList(Favorite favorite){
         gameNewsRepository.exectInserFavorite(favorite);

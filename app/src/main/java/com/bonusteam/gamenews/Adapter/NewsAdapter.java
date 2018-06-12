@@ -2,7 +2,9 @@ package com.bonusteam.gamenews.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bonusteam.gamenews.Activity.MainActivity;
 import com.bonusteam.gamenews.Activity.SingleNewActivity;
@@ -62,6 +65,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         holder.category.setText(newList.get(position).getGame());
         holder.title.setText(newList.get(position).getTitle());
         holder.date.setText(newList.get(position).getCreated_date());
+        if(newList.get(position).getFavorite()==1){
+            holder.fab.setBackgroundResource(R.drawable.ic_favorite_active);
+        }else{
+            holder.fab.setBackgroundResource(R.drawable.ic_favorite_white);
+        }
         holder.container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,9 +81,16 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
         holder.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tools.addFavorites(newList.get(position).get_id());
+                if(newList.get(position).getFavorite()!=1) {
+                    Snackbar.make(v, "Noticia añadida a favoritos", Snackbar.LENGTH_SHORT).show();
+                    tools.addFavorites(newList.get(position).get_id());
+                }else{
+                    Snackbar.make(v, "Noticia removida de favoritos", Snackbar.LENGTH_SHORT).show();
+                    tools.removeFavorites(newList.get(position).get_id());
+                }
             }
         });
+
     }
 
 

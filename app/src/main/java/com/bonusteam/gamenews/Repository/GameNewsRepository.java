@@ -82,11 +82,6 @@ public class GameNewsRepository {
      */
 
     public LiveData<List<Favorite>> getAllFavorites(){
-        api = getFavoritesNoticesByRepo();
-        disposable.add(api.getFavoritesListUser()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(getFavoritesObserver()));
         return favoriteList;
     }
     public LiveData<User> getCurrentUser(){
@@ -128,12 +123,15 @@ public class GameNewsRepository {
         return userList;
     }
     public LiveData<List<New>> getAllNews() {
-        disposable.add(api.getNewsByRepo()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeWith(getNewsRepoObserver()));
         return newList;
     }
+    public LiveData<List<New>> getFavoritesObjectNews(){
+        return newDao.getFavoritesNews();
+    }
+
+    /**
+     * SETTERS
+     */
 
     public void addFavoriteNew(String idUser,String idNew){
         api = createAddFavRequest();
@@ -142,8 +140,31 @@ public class GameNewsRepository {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(addFavObserver()));
     }
+    public void removeFavoriteNew(String User,String idNew){
+        api = createAddFavRequest();
+        disposable.add(api.removeFavorite(User,idNew)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(removeFavObserver()));
+    }
     public void exectInserFavorite(Favorite fab){
         insertFavorite(fab);
+    }
+    /**
+     * Metodos para obtener informacion de la API
+     */
+    public void refreshNews(){
+        disposable.add(api.getNewsByRepo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(getNewsRepoObserver()));
+    }
+    public void refresFavoritesListID(){
+        api = getFavoritesNoticesByRepo();
+        disposable.add(api.getFavoritesListUser()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(getFavoritesObserver()));
     }
 
 
@@ -167,8 +188,19 @@ public class GameNewsRepository {
     }
 
     private void insertFavorite(Favorite fab) {
-        new favoritesAsyncTaskt(favoriteDAO).execute(fab);
+        new favoritesInsertAsyncTask(favoriteDAO).execute(fab);
     }
+
+    public void updateFavNewState(String value, String idNew){
+        new favoritesUpdateAsyncTask(newDao).execute(value,idNew);
+    }
+
+    public void deleteAllFavotitesID(){
+        new deleteAllFavotitesIDAsyncTask(favoriteDAO).execute();
+    }
+
+
+
 
 
     /**
@@ -224,17 +256,44 @@ public class GameNewsRepository {
             return null;
         }
     }
-    private static class favoritesAsyncTaskt extends AsyncTask<Favorite,Void,Void>{
+    private static class favoritesInsertAsyncTask extends AsyncTask<Favorite,Void,Void>{
 
         private FavoriteDAO favoriteDAO;
 
-        public favoritesAsyncTaskt(FavoriteDAO favoriteDAO){
+        public favoritesInsertAsyncTask(FavoriteDAO favoriteDAO){
             this.favoriteDAO = favoriteDAO;
         }
 
         @Override
         protected Void doInBackground(Favorite... favorites) {
             favoriteDAO.insertFavorite(favorites[0]);
+            return null;
+        }
+    }
+    private static class favoritesUpdateAsyncTask extends AsyncTask<String,Void,Void>{
+        private NewDao dao;
+
+        public favoritesUpdateAsyncTask(NewDao dao){
+            this.dao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(String... values) {
+            Log.d("UPDATE_VALUES",values[0] +" "+ values[1]);
+            dao.updateFavoriteState(Integer.parseInt(values[0]),values[1]);
+            return null;
+        }
+    }
+
+    private static class deleteAllFavotitesIDAsyncTask extends AsyncTask<Void,Void,Void>{
+        private FavoriteDAO dao;
+        public deleteAllFavotitesIDAsyncTask(FavoriteDAO dao){
+            this.dao =dao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            dao.deleteAll();
             return null;
         }
     }
@@ -289,7 +348,7 @@ public class GameNewsRepository {
 
             @Override
             public void onError(Throwable e) {
-                Log.d("ERROR_REPO: ",e.getMessage());
+                Log.d("ERROR_REPO_USER: ",e.getMessage());
             }
         };
     }
@@ -461,6 +520,7 @@ public class GameNewsRepository {
         return new DisposableSingleObserver<FavoriteResponse>() {
             @Override
             public void onSuccess(FavoriteResponse values) {
+                deleteAllFavotitesID();
                 for(String value:values.get_id()){
                     insertFavorite(new Favorite(value));
                 }
@@ -468,7 +528,7 @@ public class GameNewsRepository {
 
             @Override
             public void onError(Throwable e) {
-
+                Log.d("FAVORITESIDREPO",e.getMessage());
             }
         };
     }
@@ -494,6 +554,19 @@ public class GameNewsRepository {
         return retrofit.create(GameNewsAPI.class);
     }
     private DisposableSingleObserver<Void> addFavObserver(){
+        return new DisposableSingleObserver<Void>() {
+            @Override
+            public void onSuccess(Void value) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        };
+    }
+    private DisposableSingleObserver<Void> removeFavObserver(){
         return new DisposableSingleObserver<Void>() {
             @Override
             public void onSuccess(Void value) {

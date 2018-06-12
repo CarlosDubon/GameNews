@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity
     public static String TOKEN_SECURITY = "SECURITY_PREFERENCE_TOKEN";
     private User currentUser;
     private List<Favorite> idNewList;
+    private List<New> favoritesNewList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity
             securityToken = i.getParcelableExtra("SECURITY_TOKEN");
             Log.d("TOKEN: ", securityToken.getTokenSecurity());
         }
-
+        actionBar = getSupportActionBar();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -94,23 +95,9 @@ public class MainActivity extends AppCompatActivity
         newsAdapter = new NewsAdapter(this);
         viewModel = ViewModelProviders.of(this).get(GameNewsViewModel.class);
 
-        viewModel.getAllNews().observe(this, new Observer<List<New>>() {
-            @Override
-            public void onChanged(@Nullable List<New> newList) {
+        viewModel.refreshNews();
+        viewModel.refreshNewsListID();
 
-                newsAdapter.fillNews(newList);
-            }
-        });
-        viewModel.getGameList().observe(this, new Observer<List<CategoryGame>>() {
-            @Override
-            public void onChanged(@Nullable List<CategoryGame> categoryGames) {
-                if(gameList!=null){
-                    gameList.clear();
-                }
-                gameList = categoryGames;
-                addMenuItemInNavMenuDrawer();
-            }
-        });
         viewModel.getCurrentUser().observe(this, new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
@@ -122,12 +109,51 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         });
+
+        viewModel.getGameList().observe(this, new Observer<List<CategoryGame>>() {
+            @Override
+            public void onChanged(@Nullable List<CategoryGame> categoryGames) {
+                if(gameList!=null){
+                    gameList.clear();
+                }
+                gameList = categoryGames;
+                addMenuItemInNavMenuDrawer();
+            }
+        });
         viewModel.getFavorieList().observe(this, new Observer<List<Favorite>>() {
             @Override
             public void onChanged(@Nullable List<Favorite> favorites) {
+                if(idNewList!=null) {
+                    idNewList.clear();
+                }
                 idNewList = favorites;
+                if (favorites != null) {
+                    for(Favorite value:favorites){
+                        viewModel.updateNewFaState("1",value.get_id());
+                        Log.d("ID_FAVS",value.get_id());
+                    }
+                }
             }
         });
+        viewModel.getAllNews().observe(this, new Observer<List<New>>() {
+            @Override
+            public void onChanged(@Nullable List<New> newList) {
+                if(newList!=null && !newList.isEmpty()) {
+                    newsAdapter.fillNews(newList);
+                }
+            }
+        });
+
+        viewModel.getFavoriteObjectNews().observe(this, new Observer<List<New>>() {
+            @Override
+            public void onChanged(@Nullable List<New> newList) {
+                if(newList!=null &&!newList.isEmpty())
+                    favoritesNewList = newList;
+                }
+        });
+
+
+
 
     }
 
@@ -164,13 +190,12 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
         Fragment fragment = null;
         if(id==R.id.News_menu){
-            actionBar.setElevation(8);
             actionBar.setTitle(R.string.app_name);
             fragment = new MainNewsFragment();
 
         }
         if(id == R.id.favorites){
-            fragment = FavoriteNewFragment.newInstance(idNewList);
+            fragment = FavoriteNewFragment.newInstance(favoritesNewList);
         }
 
         int i = 0;
@@ -196,7 +221,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
     public void initControls(User user){
-        actionBar = getSupportActionBar();
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         username = headerView.findViewById(R.id.username_bar);
@@ -231,7 +255,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void addFavorites(String idNew) {
-        viewModel.addToFavList(new Favorite(idNew));
+        //viewModel.addToFavList(new Favorite(idNew));
         viewModel.addFavoriteNew(currentUser.get_id(),idNew);
+        viewModel.updateNewFaState("1",idNew);
+        viewModel.refreshNewsListID();
+    }
+
+    @Override
+    public void removeFavorites(String idNew) {
+        viewModel.updateNewFaState("0",idNew);
+        viewModel.removeFavoriteNew(currentUser.get_id(),idNew);
+        viewModel.refreshNewsListID();
     }
 }

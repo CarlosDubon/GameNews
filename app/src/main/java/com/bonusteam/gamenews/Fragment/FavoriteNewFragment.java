@@ -24,24 +24,23 @@ import java.util.List;
 
 public class FavoriteNewFragment extends Fragment {
 
-    private List<Favorite> favoritesNewsID;
+    private List<New> favoritesNews;
     private GameNewsViewModel model;
     private RecyclerView recyclerView;
     private NewsAdapter adapter;
-    List<New> newList = new ArrayList<>();
 
 
     public FavoriteNewFragment() {
     }
 
-    public static FavoriteNewFragment newInstance(List<Favorite> favoritesNewsID){
+    public static FavoriteNewFragment newInstance(List<New> favoritesNews){
         FavoriteNewFragment fragment = new FavoriteNewFragment();
-        fragment.setFavoritesNewsID(favoritesNewsID);
+        fragment.setFavoritesNews(favoritesNews);
         return fragment;
     }
 
-    public void setFavoritesNewsID(List<Favorite> favoritesNewsID){
-        this.favoritesNewsID = favoritesNewsID;
+    public void setFavoritesNews(List<New> favoritesNews){
+        this.favoritesNews = favoritesNews;
     }
 
     @Override
@@ -57,21 +56,8 @@ public class FavoriteNewFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         adapter = new NewsAdapter(getActivity());
-        model = ViewModelProviders.of(this).get(GameNewsViewModel.class);
-        for(int i=0;i<favoritesNewsID.size();i++){
-            model.getNew(favoritesNewsID.get(i).get_id()).observe(this, new Observer<New>() {
-                @Override
-                public void onChanged(@Nullable New aNew) {
-                    if(newList.indexOf(aNew)<0) {
-                        newList.add(aNew);
-                    }else{
-                        newList.set(newList.indexOf(aNew),aNew);
-                    }
-                    adapter.fillNews(newList);
-                    recyclerView.setAdapter(adapter);
-                }
-            });
-        }
+        adapter.fillNews(favoritesNews);
+        recyclerView.setAdapter(adapter);
         return view;
     }
 }

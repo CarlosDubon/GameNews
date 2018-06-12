@@ -26,4 +26,10 @@ public interface NewDao {
 
     @Query("DELETE FROM news_table")
     void deleteAll();
+
+    @Query("UPDATE news_table SET favorite = :value WHERE id = :idNew ")
+    void updateFavoriteState(int value,String idNew);
+
+    @Query("SELECT * FROM news_table WHERE favorite =1")
+    LiveData<List<New>> getFavoritesNews();
 }

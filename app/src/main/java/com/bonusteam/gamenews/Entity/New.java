@@ -26,6 +26,9 @@ public class New {
     @NonNull
     @ColumnInfo(name = "game")
     private String game;
+    @NonNull
+    @ColumnInfo(name = "favorite")
+    private int favorite=0;
 
     @Ignore
     public New(){}
@@ -94,6 +97,15 @@ public class New {
 
     public String getGame() {
         return game;
+    }
+
+    @NonNull
+    public int getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(@NonNull int favorite) {
+        this.favorite = favorite;
     }
 
     @Override
