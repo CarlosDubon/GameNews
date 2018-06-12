@@ -147,9 +147,13 @@ public class MainActivity extends AppCompatActivity
         viewModel.getFavoriteObjectNews().observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> newList) {
-                if(newList!=null &&!newList.isEmpty())
+                if(newList!=null) {
+                    if(favoritesNewList!=null) {
+                        favoritesNewList.clear();
+                    }
                     favoritesNewList = newList;
                 }
+            }
         });
 
 
@@ -254,10 +258,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void refreshNews() {
+        viewModel.refreshNews();
+        viewModel.refreshNewsListID();
+    }
+
+    @Override
     public void addFavorites(String idNew) {
-        //viewModel.addToFavList(new Favorite(idNew));
-        viewModel.addFavoriteNew(currentUser.get_id(),idNew);
         viewModel.updateNewFaState("1",idNew);
+        viewModel.addFavoriteNew(currentUser.get_id(),idNew);
         viewModel.refreshNewsListID();
     }
 

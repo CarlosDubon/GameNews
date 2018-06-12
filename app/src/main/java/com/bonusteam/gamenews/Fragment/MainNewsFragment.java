@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +14,11 @@ import android.view.ViewGroup;
 
 import com.bonusteam.gamenews.R;
 
-public class MainNewsFragment extends Fragment {
+public class MainNewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     View view;
     MainSetters tools;
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout mainContent;
     private String game;
 
     public MainNewsFragment() {
@@ -41,6 +43,8 @@ public class MainNewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view =inflater.inflate(R.layout.fragment_main_news, container, false);
         recyclerView = view.findViewById(R.id.recyclerview_news_general);
+        mainContent = view.findViewById(R.id.refreshLayoutNews);
+        mainContent.setOnRefreshListener(this);
         GridLayoutManager glm = new GridLayoutManager(getActivity(),2);
         glm.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -54,12 +58,20 @@ public class MainNewsFragment extends Fragment {
         });
         recyclerView.setLayoutManager(glm);
         tools.setAdapters(recyclerView);
+
         return view ;
+    }
+
+    @Override
+    public void onRefresh() {
+        tools.refreshNews();
+        mainContent.setRefreshing(false);
     }
 
 
     public interface MainSetters {
         void setAdapters(RecyclerView rv);
+        void refreshNews();
     }
 
     @Override
