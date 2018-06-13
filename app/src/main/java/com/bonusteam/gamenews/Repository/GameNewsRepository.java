@@ -85,11 +85,6 @@ public class GameNewsRepository {
         return favoriteList;
     }
     public LiveData<User> getCurrentUser(){
-        api = getCurrentUserByRepo();
-        disposable.add(api.getCurrentUser()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeWith(getUserLogged()));
         return currentUser;
     }
     public LiveData<List<CategoryGame>> getAllGames(){
@@ -112,11 +107,6 @@ public class GameNewsRepository {
         return playerList;
     }
     public LiveData<List<Player>> getAllPlayer(){
-        api = getPlayersFromAPI();
-        disposable.add(api.getAllPlayers()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeWith(getPlayerRepoResponse()));
         return playerList;
     }
     public LiveData<List<User>> getAllUsers(){
@@ -153,18 +143,32 @@ public class GameNewsRepository {
     /**
      * Metodos para obtener informacion de la API
      */
+    public void refreshCurrentUser(){
+        api = getCurrentUserByRepo();
+        disposable.add(api.getCurrentUser()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(getUserLogged()));
+    }
     public void refreshNews(){
         disposable.add(api.getNewsByRepo()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(getNewsRepoObserver()));
     }
-    public void refresFavoritesListID(){
+    public void refreshFavoritesListID(){
         api = getFavoritesNoticesByRepo();
         disposable.add(api.getFavoritesListUser()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(getFavoritesObserver()));
+    }
+    public void refreshTopPlayers(){
+        api = getPlayersFromAPI();
+        disposable.add(api.getAllPlayers()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(getPlayerRepoResponse()));
     }
 
 
@@ -194,9 +198,12 @@ public class GameNewsRepository {
     public void updateFavNewState(String value, String idNew){
         new favoritesUpdateAsyncTask(newDao).execute(value,idNew);
     }
-
     public void deleteAllFavotitesID(){
         new deleteAllFavotitesIDAsyncTask(favoriteDAO).execute();
+    }
+
+    public void deleteAllUsers(){
+        new deleteAllUsersAsyncTask(userDao).execute();
     }
 
 
@@ -297,6 +304,18 @@ public class GameNewsRepository {
             return null;
         }
     }
+    private static class deleteAllUsersAsyncTask extends AsyncTask<Void,Void,Void>{
+        private UserDao userDao;
+        public deleteAllUsersAsyncTask(UserDao userDao){
+            this.userDao = userDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            userDao.deleteAllUser();
+            return null;
+        }
+    }
 
 
 
@@ -343,6 +362,7 @@ public class GameNewsRepository {
                         newNotice.setGame(notice.getGame());
                         insertNews(newNotice);
                     }
+                    refreshFavoritesListID();
                 }
             }
 

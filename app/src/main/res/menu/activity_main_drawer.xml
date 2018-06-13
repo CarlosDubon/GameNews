@@ -19,15 +19,21 @@
 
     <item android:title="Communicate">
         <menu>
-            <item
-                android:id="@+id/favorites"
-                android:icon="@drawable/ic_favorite_grey"
-                android:title="Favorites" />
-            <item
-                android:id="@+id/setting"
-                android:icon="@drawable/ic_settings_white"
-                android:title="Settings" />
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/favorites"
+                    android:icon="@drawable/ic_favorite_grey"
+                    android:title="Favorites" />
+                <item
+                    android:id="@+id/setting"
+                    android:icon="@drawable/ic_settings_white"
+                    android:title="Settings" />
+            </group>
         </menu>
     </item>
+    <item
+        android:icon="@drawable/ic_exit_white"
+        android:id="@+id/logout"
+        android:title="Logout"/>
 
 </menu>

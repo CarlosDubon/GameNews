@@ -4,14 +4,19 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.SubMenu;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -35,6 +40,7 @@ import com.bonusteam.gamenews.Fragment.FavoriteNewFragment;
 import com.bonusteam.gamenews.Fragment.MainNewsFragment;
 import com.bonusteam.gamenews.Fragment.NewsByGameFragment;
 import com.bonusteam.gamenews.Fragment.NewsContainerFragment;
+import com.bonusteam.gamenews.Fragment.TopPlayerFragment;
 import com.bonusteam.gamenews.Interface.NewTools;
 import com.bonusteam.gamenews.Model.GameNewsViewModel;
 import com.bonusteam.gamenews.R;
@@ -47,6 +53,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MainNewsFragment.MainSetters ,
+        FavoriteNewFragment.FavoriteNewsTools,
+        TopPlayerFragment.TopPlayersTools,
         NewTools{
 
 
@@ -68,12 +76,11 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Intent i = getIntent();
-        if(i!=null) {
-            securityToken = i.getParcelableExtra("SECURITY_TOKEN");
-            Log.d("TOKEN: ", securityToken.getTokenSecurity());
-        }
+        String value = getApplicationContext().getSharedPreferences("Token",MODE_PRIVATE).getString(TOKEN_SECURITY,"");
+        securityToken = new SecurityToken(value);
+        Log.d("TOKEN",securityToken.getTokenSecurity());
         actionBar = getSupportActionBar();
+        actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorAccent)));
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -95,17 +102,19 @@ public class MainActivity extends AppCompatActivity
         newsAdapter = new NewsAdapter(this);
         viewModel = ViewModelProviders.of(this).get(GameNewsViewModel.class);
 
+        viewModel.getCurrentUser();
         viewModel.refreshNews();
         viewModel.refreshNewsListID();
+        viewModel.refreshTopPlayers();
 
         viewModel.getCurrentUser().observe(this, new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
                 if (user != null) {
                     currentUser = user;
-                    Log.d("USUARIO ACTUAL", currentUser.toString());
-                    initControls(currentUser);
-
+                    if(currentUser!=null) {
+                        initControls(currentUser);
+                    }
                 }
             }
         });
@@ -138,7 +147,7 @@ public class MainActivity extends AppCompatActivity
         viewModel.getAllNews().observe(this, new Observer<List<New>>() {
             @Override
             public void onChanged(@Nullable List<New> newList) {
-                if(newList!=null && !newList.isEmpty()) {
+                if(newList!=null) {
                     newsAdapter.fillNews(newList);
                 }
             }
@@ -201,6 +210,10 @@ public class MainActivity extends AppCompatActivity
         if(id == R.id.favorites){
             fragment = FavoriteNewFragment.newInstance(favoritesNewList);
         }
+        if(id == R.id.logout){
+            viewModel.deleteAllUsers();
+            loggOut();
+        }
 
         int i = 0;
         if(gameList!=null) {
@@ -253,6 +266,19 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
+    public void addFavorites(String idNew) {
+        viewModel.updateNewFaState("1",idNew);
+        viewModel.addFavoriteNew(currentUser.get_id(),idNew);
+        viewModel.refreshNews();
+    }
+
+    @Override
+    public void removeFavorites(String idNew) {
+        viewModel.updateNewFaState("0",idNew);
+        viewModel.removeFavoriteNew(currentUser.get_id(),idNew);
+        viewModel.refreshNews();
+    }
+    @Override
     public void setAdapters(RecyclerView rv) {
         rv.setAdapter(newsAdapter);
     }
@@ -260,20 +286,38 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void refreshNews() {
         viewModel.refreshNews();
+        //viewModel.refreshNewsListID();
+    }
+
+    @Override
+    public void refreshFavorites() {
         viewModel.refreshNewsListID();
     }
 
     @Override
-    public void addFavorites(String idNew) {
-        viewModel.updateNewFaState("1",idNew);
-        viewModel.addFavoriteNew(currentUser.get_id(),idNew);
-        viewModel.refreshNewsListID();
+    public void refreshTopPlayers() {
+        viewModel.refreshTopPlayers();
     }
 
-    @Override
-    public void removeFavorites(String idNew) {
-        viewModel.updateNewFaState("0",idNew);
-        viewModel.removeFavoriteNew(currentUser.get_id(),idNew);
-        viewModel.refreshNewsListID();
+    public void timeTokenExceeded(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this,R.style.myDialog));
+        builder.setMessage("Session time exceeded, Please loggin again")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        loggOut();
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
+
+    public void loggOut(){
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("Token",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear().apply();
+        startActivity(new Intent(MainActivity.this,LogginActivity.class));
+    }
+
 }

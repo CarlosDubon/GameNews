@@ -35,11 +35,11 @@ public class LogginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String savedToken = getPreferences(Context.MODE_PRIVATE).getString(TOKEN_SECURITY,"");
+        String savedToken = getApplicationContext().getSharedPreferences("Token",Context.MODE_PRIVATE).getString(TOKEN_SECURITY,"");
         if(!savedToken.equals("")){
             securityToken  = new SecurityToken(savedToken);
             Intent i = new Intent(LogginActivity.this,MainActivity.class);
-            i.putExtra("SECURITY_TOKEN",securityToken);
+            //i.putExtra("SECURITY_TOKEN",securityToken);
             startActivity(i);
         }
         setContentView(R.layout.activity_loggin);
@@ -77,10 +77,10 @@ public class LogginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(SecurityToken value) {
                 securityToken = value;
-                SharedPreferences shared = LogginActivity.this.getPreferences(Context.MODE_PRIVATE);
+                SharedPreferences shared = LogginActivity.this.getApplicationContext().getSharedPreferences("Token",Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = shared.edit();
                 editor.putString(TOKEN_SECURITY,securityToken.getTokenSecurity());
-                editor.commit();
+                editor.apply();
                 Intent i = new Intent(LogginActivity.this,MainActivity.class);
                 i.putExtra("SECURITY_TOKEN",securityToken);
                 startActivity(i);

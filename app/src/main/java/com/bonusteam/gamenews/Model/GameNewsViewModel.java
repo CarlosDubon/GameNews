@@ -31,7 +31,15 @@ public class GameNewsViewModel extends AndroidViewModel {
         gameNewsRepository.refreshNews();
     }
     public void refreshNewsListID(){
-        gameNewsRepository.refresFavoritesListID();
+        gameNewsRepository.refreshFavoritesListID();
+    }
+    public void refreshTopPlayers(){gameNewsRepository.refreshTopPlayers();}
+    public void refreshCurrentUser(){
+        gameNewsRepository.refreshCurrentUser();
+    }
+
+    public void deleteAllUsers(){
+        gameNewsRepository.deleteAllUsers();
     }
 
     public LiveData<List<New>> getFavoriteObjectNews(){
