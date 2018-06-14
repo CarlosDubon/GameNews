@@ -92,4 +92,8 @@ public class GameNewsViewModel extends AndroidViewModel {
         LiveData<List<CategoryGame>> gameList = gameNewsRepository.getAllGames();
         return gameList;
     }
+
+    public int getErrorCatcher(){
+        return gameNewsRepository.getErrorCatcher();
+    }
 }

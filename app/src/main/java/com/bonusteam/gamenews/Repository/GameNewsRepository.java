@@ -60,6 +60,8 @@ public class GameNewsRepository {
     private LiveData<User> currentUser;
     private LiveData<List<Favorite>> favoriteList;
 
+    private int errorCatcher = 200;
+
     public GameNewsRepository(Application application){
         GameNewsRoomDatabase db = GameNewsRoomDatabase.getDatabase(application);
         userDao = db.userDao();
@@ -117,6 +119,10 @@ public class GameNewsRepository {
     }
     public LiveData<List<New>> getFavoritesObjectNews(){
         return newDao.getFavoritesNews();
+    }
+
+    public int getErrorCatcher(){
+        return errorCatcher;
     }
 
     /**
@@ -332,6 +338,11 @@ public class GameNewsRepository {
                         Request newRequest = chain.request().newBuilder()
                                 .addHeader("Authorization","Bearer "+ MainActivity.securityToken.getTokenSecurity())
                                 .build();
+
+                        Response response = chain.proceed(newRequest);
+                        if(response.code() != 200){
+                            errorCatcher = response.code();
+                        }
                         return chain.proceed(newRequest);
                     }
 
@@ -385,6 +396,10 @@ public class GameNewsRepository {
                         Request newRequest = chain.request().newBuilder()
                                 .addHeader("Authorization","Bearer "+ MainActivity.securityToken.getTokenSecurity())
                                 .build();
+                        Response response = chain.proceed(newRequest);
+                        if(response.code() != 200){
+                            errorCatcher = response.code();
+                        }
                         return chain.proceed(newRequest);
                     }
 
@@ -431,6 +446,10 @@ public class GameNewsRepository {
                         Request request = chain.request().newBuilder()
                                 .addHeader("Authorization","Bearer "+ MainActivity.securityToken.getTokenSecurity())
                                 .build();
+                        Response response = chain.proceed(request);
+                        if(response.code() != 200){
+                            errorCatcher = response.code();
+                        }
                         return chain.proceed(request);
                     }
                 }).build();
@@ -474,6 +493,10 @@ public class GameNewsRepository {
                         Request newRequest = chain.request().newBuilder()
                                 .addHeader("Authorization","Bearer "+ MainActivity.securityToken.getTokenSecurity())
                                 .build();
+                        Response response = chain.proceed(newRequest);
+                        if(response.code() != 200){
+                            errorCatcher = response.code();
+                        }
                         return chain.proceed(newRequest);
                     }
 
@@ -522,6 +545,10 @@ public class GameNewsRepository {
                         Request newRequest = chain.request().newBuilder()
                                 .addHeader("Authorization","Bearer "+ MainActivity.securityToken.getTokenSecurity())
                                 .build();
+                        Response response = chain.proceed(newRequest);
+                        if(response.code() != 200){
+                            errorCatcher = response.code();
+                        }
                         return chain.proceed(newRequest);
                     }
 
@@ -561,6 +588,10 @@ public class GameNewsRepository {
                         Request request = chain.request().newBuilder()
                                 .addHeader("Authorization","Bearer "+ MainActivity.securityToken.getTokenSecurity())
                                 .build();
+                        Response response = chain.proceed(request);
+                        if(response.code() != 200){
+                            errorCatcher = response.code();
+                        }
                         return chain.proceed(request);
                     }
                 }).build();

@@ -8,10 +8,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +32,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bonusteam.gamenews.Adapter.NewsAdapter;
@@ -70,6 +75,7 @@ public class MainActivity extends AppCompatActivity
     private User currentUser;
     private List<Favorite> idNewList;
     private List<New> favoritesNewList;
+    private LinearLayout contentMain;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +85,7 @@ public class MainActivity extends AppCompatActivity
         String value = getApplicationContext().getSharedPreferences("Token",MODE_PRIVATE).getString(TOKEN_SECURITY,"");
         securityToken = new SecurityToken(value);
         Log.d("TOKEN",securityToken.getTokenSecurity());
+        contentMain = findViewById(R.id.content_main);
         actionBar = getSupportActionBar();
         actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorAccent)));
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -102,19 +109,23 @@ public class MainActivity extends AppCompatActivity
         newsAdapter = new NewsAdapter(this);
         viewModel = ViewModelProviders.of(this).get(GameNewsViewModel.class);
 
-        viewModel.getCurrentUser();
-        viewModel.refreshNews();
-        viewModel.refreshNewsListID();
-        viewModel.refreshTopPlayers();
+        if(isOnline()) {
+            viewModel.refreshNews();
+            viewModel.refreshNewsListID();
+            viewModel.refreshTopPlayers();
+            viewModel.refreshCurrentUser();
+            int error = viewModel.getErrorCatcher();
+            errorManage(error);
+        }else{
+            Snackbar.make(contentMain,"Actualmente no cuenta con una conexion estable a internet, puede que se experimenten problemas",Snackbar.LENGTH_LONG).show();
+        }
 
         viewModel.getCurrentUser().observe(this, new Observer<User>() {
             @Override
             public void onChanged(@Nullable User user) {
                 if (user != null) {
                     currentUser = user;
-                    if(currentUser!=null) {
-                        initControls(currentUser);
-                    }
+                    initControls(currentUser);
                 }
             }
         });
@@ -267,6 +278,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void addFavorites(String idNew) {
+        errorManage(viewModel.getErrorCatcher());
         viewModel.updateNewFaState("1",idNew);
         viewModel.addFavoriteNew(currentUser.get_id(),idNew);
         viewModel.refreshNews();
@@ -274,6 +286,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void removeFavorites(String idNew) {
+        errorManage(viewModel.getErrorCatcher());
         viewModel.updateNewFaState("0",idNew);
         viewModel.removeFavoriteNew(currentUser.get_id(),idNew);
         viewModel.refreshNews();
@@ -285,24 +298,28 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void refreshNews() {
+        errorManage(viewModel.getErrorCatcher());
         viewModel.refreshNews();
         //viewModel.refreshNewsListID();
     }
 
     @Override
     public void refreshFavorites() {
+        errorManage(viewModel.getErrorCatcher());
         viewModel.refreshNewsListID();
     }
 
     @Override
     public void refreshTopPlayers() {
+        errorManage(viewModel.getErrorCatcher());
         viewModel.refreshTopPlayers();
     }
 
     public void timeTokenExceeded(){
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this,R.style.myDialog));
-        builder.setMessage("Session time exceeded, Please loggin again")
+        builder.setMessage("Session time exceeded, Please login again")
                 .setCancelable(false)
+                .setIcon(R.drawable.ic_access_time)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -318,6 +335,20 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear().apply();
         startActivity(new Intent(MainActivity.this,LogginActivity.class));
+    }
+
+    public boolean isOnline(){
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnectedOrConnecting();
+    }
+
+    public void errorManage(int error){
+        switch (error){
+            case 401:
+                timeTokenExceeded();
+                break;
+        }
     }
 
 }
