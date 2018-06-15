@@ -279,17 +279,17 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void addFavorites(String idNew) {
+        viewModel.addFavoriteNew(currentUser.get_id(),idNew);
         errorManage(viewModel.getErrorCatcher());
         viewModel.updateNewFaState("1",idNew);
-        viewModel.addFavoriteNew(currentUser.get_id(),idNew);
         viewModel.refreshNews();
     }
 
     @Override
     public void removeFavorites(String idNew) {
+        viewModel.removeFavoriteNew(currentUser.get_id(),idNew);
         errorManage(viewModel.getErrorCatcher());
         viewModel.updateNewFaState("0",idNew);
-        viewModel.removeFavoriteNew(currentUser.get_id(),idNew);
         viewModel.refreshNews();
     }
     @Override
