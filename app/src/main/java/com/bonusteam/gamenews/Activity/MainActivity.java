@@ -317,8 +317,8 @@ public class MainActivity extends AppCompatActivity
     public void refreshFavorites() {
         if(isOnline()) {
             errorManage(viewModel.getErrorCatcher());
+            viewModel.refreshNews();
             viewModel.refreshNewsListID();
-            viewModel.refreshCurrentUser();
         }else{
             Snackbar message = Snackbar.make(contentMain,"Error al intentar conectar, no se pudo actualizar",Snackbar.LENGTH_LONG);
             message.getView().setBackgroundColor(Color.rgb(167,20,33));
