@@ -1,12 +1,12 @@
 package com.bonusteam.gamenews.Activity;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,7 +15,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.net.ConnectivityManagerCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -43,7 +42,6 @@ import com.bonusteam.gamenews.Entity.SecurityToken;
 import com.bonusteam.gamenews.Entity.User;
 import com.bonusteam.gamenews.Fragment.FavoriteNewFragment;
 import com.bonusteam.gamenews.Fragment.MainNewsFragment;
-import com.bonusteam.gamenews.Fragment.NewsByGameFragment;
 import com.bonusteam.gamenews.Fragment.NewsContainerFragment;
 import com.bonusteam.gamenews.Fragment.TopPlayerFragment;
 import com.bonusteam.gamenews.Interface.NewTools;
@@ -51,8 +49,6 @@ import com.bonusteam.gamenews.Model.GameNewsViewModel;
 import com.bonusteam.gamenews.R;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -117,7 +113,12 @@ public class MainActivity extends AppCompatActivity
             int error = viewModel.getErrorCatcher();
             errorManage(error);
         }else{
-            Snackbar.make(contentMain,"Actualmente no cuenta con una conexion estable a internet, puede que se experimenten problemas",Snackbar.LENGTH_LONG).show();
+            Snackbar message = Snackbar.make(contentMain,"Actualmente no cuenta con una conexion estable a internet, puede que se experimenten problemas",Snackbar.LENGTH_LONG);
+            message.getView().setBackgroundColor(Color.rgb(167,20,33));
+            TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
+            textView.setTextColor(Color.WHITE);
+            message.show();
+
         }
 
         viewModel.getCurrentUser().observe(this, new Observer<User>() {
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity
             public void onChanged(@Nullable User user) {
                 if (user != null) {
                     currentUser = user;
-                    initControls(currentUser);
+                    initProfile(currentUser);
                 }
             }
         });
@@ -248,7 +249,7 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public void initControls(User user){
+    public void initProfile(User user){
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
         username = headerView.findViewById(R.id.username_bar);
@@ -298,21 +299,49 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void refreshNews() {
-        errorManage(viewModel.getErrorCatcher());
-        viewModel.refreshNews();
-        //viewModel.refreshNewsListID();
+        if(isOnline()) {
+            errorManage(viewModel.getErrorCatcher());
+            viewModel.refreshNews();
+
+        }else{
+            Snackbar message = Snackbar.make(contentMain,"Error al intentar conectar, no se pudo actualizar",Snackbar.LENGTH_LONG);
+            message.getView().setBackgroundColor(Color.rgb(167,20,33));
+            TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
+            textView.setTextColor(Color.WHITE);
+            message.show();
+
+        }
     }
 
     @Override
     public void refreshFavorites() {
-        errorManage(viewModel.getErrorCatcher());
-        viewModel.refreshNewsListID();
+        if(isOnline()) {
+            errorManage(viewModel.getErrorCatcher());
+            viewModel.refreshNewsListID();
+            viewModel.refreshCurrentUser();
+        }else{
+            Snackbar message = Snackbar.make(contentMain,"Error al intentar conectar, no se pudo actualizar",Snackbar.LENGTH_LONG);
+            message.getView().setBackgroundColor(Color.rgb(167,20,33));
+            TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
+            textView.setTextColor(Color.WHITE);
+            message.show();
+
+        }
     }
 
     @Override
     public void refreshTopPlayers() {
-        errorManage(viewModel.getErrorCatcher());
-        viewModel.refreshTopPlayers();
+        if(isOnline()) {
+            errorManage(viewModel.getErrorCatcher());
+            viewModel.refreshTopPlayers();
+        }else{
+            Snackbar message = Snackbar.make(contentMain,"Error al intentar conectar, no se pudo actualizar",Snackbar.LENGTH_LONG);
+            message.getView().setBackgroundColor(Color.rgb(167,20,33));
+            TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
+            textView.setTextColor(Color.WHITE);
+            message.show();
+
+        }
     }
 
     public void timeTokenExceeded(){
