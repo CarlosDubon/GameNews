@@ -47,8 +47,10 @@ import com.bonusteam.gamenews.Fragment.TopPlayerFragment;
 import com.bonusteam.gamenews.Interface.NewTools;
 import com.bonusteam.gamenews.Model.GameNewsViewModel;
 import com.bonusteam.gamenews.R;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -72,7 +74,9 @@ public class MainActivity extends AppCompatActivity
     private User currentUser;
     private List<Favorite> idNewList;
     private List<New> favoritesNewList;
+    private List<New> allNewsList;
     private LinearLayout contentMain;
+    private MaterialSearchView searchView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,15 +95,54 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         executeLists();
+        setSearchBar();
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.screen_fragment, new MainNewsFragment());
         ft.commit();
 
+    }
+
+    private void setSearchBar() {
+        searchView = (MaterialSearchView) findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //Do some magic
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Do some magic
+                final List<New> filter = new ArrayList<>();
+                for(New query:allNewsList){
+                    final String title =  query.getTitle().toLowerCase();
+                    if(title.startsWith(newText)||title.contains(newText)){
+                        filter.add(query);
+                    }
+                }
+                newsAdapter.fillNews(filter);
+                return true;
+            }
+        });
+
+        searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
+            @Override
+            public void onSearchViewShown() {
+                //Do some magic
+            }
+
+            @Override
+            public void onSearchViewClosed() {
+                //Do some magic
+            }
+        });
     }
 
     private void executeLists() {
@@ -163,7 +206,8 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onChanged(@Nullable List<New> newList) {
                 if(newList!=null) {
-                    newsAdapter.fillNews(newList);
+                    allNewsList = newList;
+                    newsAdapter.fillNews(allNewsList);
                 }
             }
         });
@@ -200,6 +244,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView.setMenuItem(item);
         return true;
     }
 
