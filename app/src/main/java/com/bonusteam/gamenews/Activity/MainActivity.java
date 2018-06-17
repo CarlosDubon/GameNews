@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity
     private List<New> allNewsList;
     private LinearLayout contentMain;
     private MaterialSearchView searchView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
