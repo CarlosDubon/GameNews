@@ -26,7 +26,6 @@ import java.util.List;
 public class FavoriteNewFragment extends Fragment {
 
     private FavoriteNewsTools tools;
-    private List<New> favoritesNews;
     private GameNewsViewModel model;
     private RecyclerView recyclerView;
     private NewsAdapter adapter;
@@ -36,14 +35,14 @@ public class FavoriteNewFragment extends Fragment {
     public FavoriteNewFragment() {
     }
 
-    public static FavoriteNewFragment newInstance(List<New> favoritesNews){
+    public static FavoriteNewFragment newInstance(NewsAdapter adapter){
         FavoriteNewFragment fragment = new FavoriteNewFragment();
-        fragment.setFavoritesNews(favoritesNews);
+        fragment.setFavoritesNews(adapter);
         return fragment;
     }
 
-    public void setFavoritesNews(List<New> favoritesNews){
-        this.favoritesNews = favoritesNews;
+    public void setFavoritesNews(NewsAdapter adapter){
+        this.adapter = adapter;
     }
 
     @Override
@@ -65,8 +64,6 @@ public class FavoriteNewFragment extends Fragment {
                 refreshContent.setRefreshing(false);
             }
         });
-        adapter = new NewsAdapter(getActivity());
-        adapter.fillNews(favoritesNews);
         recyclerView.setAdapter(adapter);
         return view;
     }

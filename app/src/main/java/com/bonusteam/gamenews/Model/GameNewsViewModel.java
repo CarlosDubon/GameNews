@@ -49,6 +49,11 @@ public class GameNewsViewModel extends AndroidViewModel {
         gameNewsRepository.updateFavNewState(value,idNew);
     }
 
+    public void updatePasswordUserAPI(String idUser,String newpass){
+        gameNewsRepository.updateCurrentUser(idUser,newpass);
+        gameNewsRepository.updateUserPassword(newpass,idUser);
+    }
+
     public void addFavoriteNew(String idUser,String idNew){
         gameNewsRepository.addFavoriteNew(idUser,idNew);
     }

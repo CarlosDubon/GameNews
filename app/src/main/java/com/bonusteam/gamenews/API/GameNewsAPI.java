@@ -16,6 +16,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface GameNewsAPI {
@@ -53,6 +54,10 @@ public interface GameNewsAPI {
     /**ENDS POINTS ABOUT PLAYERS**/
     @GET("/players")
     Single<List<PlayersResponse>> getAllPlayers();
+
+    @PUT("/users/{idUser}")
+    @FormUrlEncoded
+    Single<Void> updateUser(@Path("idUser")String idUser,@Field("password")String password);
 
 
 

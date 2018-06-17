@@ -129,6 +129,13 @@ public class GameNewsRepository {
      * SETTERS
      */
 
+    public void updateCurrentUser(String idUser,String newPassword){
+        api = createAddFavRequest();
+        disposable.add(api.updateUser(idUser,newPassword)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(updateUserPasswordObserver()));
+    }
     public void addFavoriteNew(String idUser,String idNew){
         api = createAddFavRequest();
         disposable.add(api.addFavorite(idUser,idNew)
@@ -146,6 +153,10 @@ public class GameNewsRepository {
     public void exectInserFavorite(Favorite fab){
         insertFavorite(fab);
     }
+
+
+
+
     /**
      * Metodos para obtener informacion de la API
      */
@@ -210,6 +221,10 @@ public class GameNewsRepository {
 
     public void deleteAllUsers(){
         new deleteAllUsersAsyncTask(userDao).execute();
+    }
+
+    public void updateUserPassword(String idUser,String newPassword){
+        new updateUserPasswordAsyncTask(userDao).execute(idUser,newPassword);
     }
 
 
@@ -322,6 +337,21 @@ public class GameNewsRepository {
             return null;
         }
     }
+
+    private static class updateUserPasswordAsyncTask extends AsyncTask<String,Void,Void>{
+        private UserDao userDao;
+
+        public updateUserPasswordAsyncTask(UserDao userDao){
+            this.userDao = userDao;
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            userDao.updateUserPassword(strings[0],strings[1]);
+            return null;
+        }
+    }
+
 
 
 
@@ -618,6 +648,20 @@ public class GameNewsRepository {
         };
     }
     private DisposableSingleObserver<Void> removeFavObserver(){
+        return new DisposableSingleObserver<Void>() {
+            @Override
+            public void onSuccess(Void value) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        };
+    }
+
+    private DisposableSingleObserver<Void> updateUserPasswordObserver(){
         return new DisposableSingleObserver<Void>() {
             @Override
             public void onSuccess(Void value) {

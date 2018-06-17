@@ -26,4 +26,7 @@ public interface UserDao {
     LiveData<List<User>> getAllUsers();
     @Query("DELETE FROM user_table")
     void deleteAllUser();
+
+    @Query("UPDATE user_table SET password = :value WHERE id = :idUser ")
+    void updateUserPassword(String value,String idUser);
 }

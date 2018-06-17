@@ -19,4 +19,12 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_nombre_de_jugador">Nombre de jugador</string>
     <string name="text_biografia">Biografia</string>
+    <string name="text_favorites">Favorites</string>
+    <string name="text_first_date">First Date</string>
+    <string name="text_security">Security</string>
+    <string name="text_user_information">User Information</string>
+    <string name="text_old_password">Old Password</string>
+    <string name="text_new_password">New Password</string>
+    <string name="text_repeat_password">Repeat Password</string>
+    <string name="text_change_password">Change Password</string>
 </resources>

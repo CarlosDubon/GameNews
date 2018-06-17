@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity
     public static SecurityToken securityToken;
     private final static int ID_INFLATED_MENU = 101010101;
     private NewsAdapter newsAdapter;
+    private NewsAdapter favoriteNewsAdapter;
     private GameNewsViewModel viewModel;
     private ImageView avatar;
     private TextView username,created_date;
@@ -103,13 +104,15 @@ public class MainActivity extends AppCompatActivity
 
     private void executeLists() {
         newsAdapter = new NewsAdapter(this);
+        favoriteNewsAdapter = new NewsAdapter(this);
+
         viewModel = ViewModelProviders.of(this).get(GameNewsViewModel.class);
 
         if(isOnline()) {
-            viewModel.refreshNews();
             viewModel.refreshNewsListID();
             viewModel.refreshTopPlayers();
             viewModel.refreshCurrentUser();
+            viewModel.refreshNews();
             int error = viewModel.getErrorCatcher();
             errorManage(error);
         }else{
@@ -173,6 +176,7 @@ public class MainActivity extends AppCompatActivity
                         favoritesNewList.clear();
                     }
                     favoritesNewList = newList;
+                    favoriteNewsAdapter.fillNews(favoritesNewList);
                 }
             }
         });
@@ -220,11 +224,27 @@ public class MainActivity extends AppCompatActivity
 
         }
         if(id == R.id.favorites){
-            fragment = FavoriteNewFragment.newInstance(favoritesNewList);
+            fragment = FavoriteNewFragment.newInstance(favoriteNewsAdapter);
         }
         if(id == R.id.logout){
             viewModel.deleteAllUsers();
             loggOut();
+        }
+        if(id==R.id.setting){
+            if(isOnline()) {
+                viewModel.refreshCurrentUser();
+                if(viewModel.getErrorCatcher()!=200) {
+                    errorManage(viewModel.getErrorCatcher());
+                }else {
+                    startActivity(new Intent(MainActivity.this, ModifyProfile.class));
+                }
+            }else{
+                Snackbar message = Snackbar.make(contentMain,"Actualmente no cuenta con una conexion estable a internet, No se puede acceder a sus datos personales",Snackbar.LENGTH_LONG);
+                message.getView().setBackgroundColor(Color.rgb(167,20,33));
+                TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
+                textView.setTextColor(Color.WHITE);
+                message.show();
+            }
         }
 
         int i = 0;
@@ -249,6 +269,7 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     public void initProfile(User user){
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
@@ -276,21 +297,36 @@ public class MainActivity extends AppCompatActivity
         navigationView.invalidate();
     }
 
-
     @Override
     public void addFavorites(String idNew) {
-        viewModel.addFavoriteNew(currentUser.get_id(),idNew);
-        errorManage(viewModel.getErrorCatcher());
-        viewModel.updateNewFaState("1",idNew);
-        viewModel.refreshNews();
+        if(isOnline()) {
+            viewModel.addFavoriteNew(currentUser.get_id(), idNew);
+            errorManage(viewModel.getErrorCatcher());
+            viewModel.updateNewFaState("1", idNew);
+            viewModel.refreshNews();
+        }else{
+            Snackbar message = Snackbar.make(contentMain,"Actualmente no cuenta con una conexion estable a internet, puede que se experimenten problemas",Snackbar.LENGTH_LONG);
+            message.getView().setBackgroundColor(Color.rgb(167,20,33));
+            TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
+            textView.setTextColor(Color.WHITE);
+            message.show();
+        }
     }
 
     @Override
     public void removeFavorites(String idNew) {
-        viewModel.removeFavoriteNew(currentUser.get_id(),idNew);
-        errorManage(viewModel.getErrorCatcher());
-        viewModel.updateNewFaState("0",idNew);
-        viewModel.refreshNews();
+        if(isOnline()) {
+            viewModel.removeFavoriteNew(currentUser.get_id(), idNew);
+            errorManage(viewModel.getErrorCatcher());
+            viewModel.updateNewFaState("0", idNew);
+            viewModel.refreshNews();
+        }else{
+            Snackbar message = Snackbar.make(contentMain,"Actualmente no cuenta con una conexion estable a internet, puede que se experimenten problemas",Snackbar.LENGTH_LONG);
+            message.getView().setBackgroundColor(Color.rgb(167,20,33));
+            TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
+            textView.setTextColor(Color.WHITE);
+            message.show();
+        }
     }
     @Override
     public void setAdapters(RecyclerView rv) {
