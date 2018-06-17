@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity
             int error = viewModel.getErrorCatcher();
             errorManage(error);
         }else{
-            Snackbar message = Snackbar.make(contentMain,"Actualmente no cuenta con una conexion estable a internet, puede que se experimenten problemas",Snackbar.LENGTH_LONG);
+            Snackbar message = Snackbar.make(contentMain,R.string.text_no_conection,Snackbar.LENGTH_LONG);
             message.getView().setBackgroundColor(Color.rgb(167,20,33));
             TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
             textView.setTextColor(Color.WHITE);
@@ -287,7 +287,7 @@ public class MainActivity extends AppCompatActivity
                     startActivity(new Intent(MainActivity.this, ModifyProfile.class));
                 }
             }else{
-                Snackbar message = Snackbar.make(contentMain,"Actualmente no cuenta con una conexion estable a internet, No se puede acceder a sus datos personales",Snackbar.LENGTH_LONG);
+                Snackbar message = Snackbar.make(contentMain,R.string.text_no_conection,Snackbar.LENGTH_LONG);
                 message.getView().setBackgroundColor(Color.rgb(167,20,33));
                 TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
                 textView.setTextColor(Color.WHITE);
@@ -353,7 +353,7 @@ public class MainActivity extends AppCompatActivity
             viewModel.updateNewFaState("1", idNew);
             viewModel.refreshNews();
         }else{
-            Snackbar message = Snackbar.make(contentMain,"Actualmente no cuenta con una conexion estable a internet, puede que se experimenten problemas",Snackbar.LENGTH_LONG);
+            Snackbar message = Snackbar.make(contentMain,R.string.text_no_conection,Snackbar.LENGTH_LONG);
             message.getView().setBackgroundColor(Color.rgb(167,20,33));
             TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
             textView.setTextColor(Color.WHITE);
@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity
             viewModel.updateNewFaState("0", idNew);
             viewModel.refreshNews();
         }else{
-            Snackbar message = Snackbar.make(contentMain,"Actualmente no cuenta con una conexion estable a internet, puede que se experimenten problemas",Snackbar.LENGTH_LONG);
+            Snackbar message = Snackbar.make(contentMain,R.string.text_no_conection,Snackbar.LENGTH_LONG);
             message.getView().setBackgroundColor(Color.rgb(167,20,33));
             TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
             textView.setTextColor(Color.WHITE);
@@ -388,7 +388,7 @@ public class MainActivity extends AppCompatActivity
             viewModel.refreshNews();
 
         }else{
-            Snackbar message = Snackbar.make(contentMain,"Error al intentar conectar, no se pudo actualizar",Snackbar.LENGTH_LONG);
+            Snackbar message = Snackbar.make(contentMain,R.string.text_no_update,Snackbar.LENGTH_LONG);
             message.getView().setBackgroundColor(Color.rgb(167,20,33));
             TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
             textView.setTextColor(Color.WHITE);
@@ -404,7 +404,7 @@ public class MainActivity extends AppCompatActivity
             viewModel.refreshNews();
             viewModel.refreshNewsListID();
         }else{
-            Snackbar message = Snackbar.make(contentMain,"Error al intentar conectar, no se pudo actualizar",Snackbar.LENGTH_LONG);
+            Snackbar message = Snackbar.make(contentMain,R.string.text_no_update,Snackbar.LENGTH_LONG);
             message.getView().setBackgroundColor(Color.rgb(167,20,33));
             TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
             textView.setTextColor(Color.WHITE);
@@ -419,7 +419,7 @@ public class MainActivity extends AppCompatActivity
             errorManage(viewModel.getErrorCatcher());
             viewModel.refreshTopPlayers();
         }else{
-            Snackbar message = Snackbar.make(contentMain,"Error al intentar conectar, no se pudo actualizar",Snackbar.LENGTH_LONG);
+            Snackbar message = Snackbar.make(contentMain,R.string.text_no_update,Snackbar.LENGTH_LONG);
             message.getView().setBackgroundColor(Color.rgb(167,20,33));
             TextView textView = (message.getView()).findViewById(android.support.design.R.id.snackbar_action);
             textView.setTextColor(Color.WHITE);
@@ -430,7 +430,7 @@ public class MainActivity extends AppCompatActivity
 
     public void timeTokenExceeded(){
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(MainActivity.this,R.style.myDialog));
-        builder.setMessage("Session time exceeded, Please login again")
+        builder.setMessage(R.string.token_exedded)
                 .setCancelable(false)
                 .setIcon(R.drawable.ic_access_time)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {

@@ -95,7 +95,7 @@ public class ModifyProfile extends AppCompatActivity {
                                             viewModel.updatePasswordUserAPI(currentUser.get_id(),newPass.getText().toString());
                                             viewModel.refreshCurrentUser();
                                             dialogPassword.dismiss();
-                                            Snackbar.make(v,"Password changed successfuly",Snackbar.LENGTH_SHORT);
+                                            Snackbar.make(v,R.string.success_password,Snackbar.LENGTH_SHORT);
                                         }
                                     }
                                 }

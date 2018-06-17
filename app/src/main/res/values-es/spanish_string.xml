@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">GameNews</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Opciones</string>
+    <string name="text_titulo_de_noticia">TITULO DE NOTICIA</string>
+    <string name="text_descripcion_de_noticias">Descripcion de noticias</string>
+    <string name="text_categoria">Categoria</string>
+    <string name="text_username">Usuario</string>
+    <string name="text_password">Contraseña</string>
+    <string name="text_ingresar">Iniciar Sesion</string>
+    <string name="text_terminos_y_condiciones">Terminos y Condiciones</string>
+    <string name="text_ups_the_credentials_are_wrongs">Lo sentimos... Error en las credenciales</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_nombre_de_jugador">Nombre de jugador</string>
+    <string name="text_biografia">Biografia</string>
+    <string name="text_favorites">Favorites</string>
+    <string name="text_first_date">Creación</string>
+    <string name="text_security">Seguridad</string>
+    <string name="text_user_information">Información de usuario</string>
+    <string name="text_old_password">Contraseña antigua</string>
+    <string name="text_new_password">Nueva contraseña</string>
+    <string name="text_repeat_password">Repetir contraseña</string>
+    <string name="text_change_password">Cambiar contraseña</string>
+    <string name="text_search">Buscar</string>
+    <string name="text_no_conection">Actualmente tiene actualmente una conexion inestable, puede experimentar problemas </string>
+    <string name="text_no_update">Error de conexion, no se pudo actualizar</string>
+    <string name="token_exedded">Tiempo de sesion execido, porfavor iniciar sesion de nuevo</string>
+    <string name="success_password">Password changed successfuly</string>
+    <string name="add_fav">Añadidos en favoritos</string>
+    <string name="remove_fav">Removidos de favoritos</string>
+</resources>

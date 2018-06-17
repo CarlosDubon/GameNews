@@ -108,12 +108,12 @@ public class SingleNewActivity extends AppCompatActivity {
                                 model.addFavoriteNew(currentUser.get_id(),idNew);
                                 errorManage(model.getErrorCatcher());
                                 model.updateNewFaState("1",idNew);
-                                Snackbar.make(v,"Añadido a favoritos",Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(v,R.string.add_fav,Snackbar.LENGTH_LONG).show();
                             }else{
                                 model.removeFavoriteNew(currentUser.get_id(),idNew);
                                 errorManage(model.getErrorCatcher());
                                 model.updateNewFaState("0",idNew);
-                                Snackbar.make(v,"Removido de favoritos",Snackbar.LENGTH_LONG).show();
+                                Snackbar.make(v,R.string.remove_fav,Snackbar.LENGTH_LONG).show();
                             }
                         }
                     });

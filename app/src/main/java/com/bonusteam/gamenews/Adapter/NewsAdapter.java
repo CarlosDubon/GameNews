@@ -82,10 +82,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             @Override
             public void onClick(View v) {
                 if(newList.get(position).getFavorite()!=1) {
-                    Snackbar.make(v, "Noticia añadida a favoritos", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(v, R.string.add_fav, Snackbar.LENGTH_SHORT).show();
                     tools.addFavorites(newList.get(position).get_id());
                 }else{
-                    Snackbar.make(v, "Noticia removida de favoritos", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(v, R.string.remove_fav, Snackbar.LENGTH_SHORT).show();
                     tools.removeFavorites(newList.get(position).get_id());
                 }
             }
